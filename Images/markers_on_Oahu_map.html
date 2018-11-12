@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>L_PREFER_CANVAS=false; L_NO_TOUCH=false; L_DISABLE_3D=false;</script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawgit.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+    <style>#map_efac72d6e0f24243be65a4c6161adee7 {
+        position: relative;
+        width: 100.0%;
+        height: 100.0%;
+        left: 0.0%;
+        top: 0.0%;
+        }
+    </style>
+</head>
+<body>    
+    
+    <div class="folium-map" id="map_efac72d6e0f24243be65a4c6161adee7" ></div>
+</body>
+<script>    
+    
+    
+        var bounds = null;
+    
+
+    var map_efac72d6e0f24243be65a4c6161adee7 = L.map(
+        'map_efac72d6e0f24243be65a4c6161adee7', {
+        center: [21.4513, -158.0153],
+        zoom: 10,
+        maxBounds: bounds,
+        layers: [],
+        worldCopyJump: false,
+        crs: L.CRS.EPSG3857,
+        zoomControl: true,
+        });
+
+    
+    
+    var tile_layer_60d482c9370e430aaa1a62a0eae7b354 = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+        "attribution": null,
+        "detectRetina": false,
+        "maxNativeZoom": 18,
+        "maxZoom": 18,
+        "minZoom": 0,
+        "noWrap": false,
+        "subdomains": "abc"
+}).addTo(map_efac72d6e0f24243be65a4c6161adee7);
+    
+            var feature_group_e08a4e9efc6444909152cc996dab93d7 = L.featureGroup(
+                ).addTo(map_efac72d6e0f24243be65a4c6161adee7);
+        
+    
+        var marker_a5894523bd7c4a90b84fd3a99e0f33e7 = L.marker(
+            [21.315199999999574, -157.99920000000049],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_cf762b97eeee44f6ad2d499abc202c14 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_90e98a0c523e4cdbbb350a30d0d190a3 = $('<div id="html_90e98a0c523e4cdbbb350a30d0d190a3" style="width: 100.0%; height: 100.0%;">Station ID: USC00511918<br>Elev: 0.9</div>')[0];
+                popup_cf762b97eeee44f6ad2d499abc202c14.setContent(html_90e98a0c523e4cdbbb350a30d0d190a3);
+            
+
+            marker_a5894523bd7c4a90b84fd3a99e0f33e7.bindPopup(popup_cf762b97eeee44f6ad2d499abc202c14)
+            ;
+
+            
+        
+    
+        var marker_830d2016b2394ec5a79902d9d2d47825 = L.marker(
+            [21.423399999999702, -157.8015000000013],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_83151a91b05a4f6d9c3a1f82db786a0a = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_5a0b6b961a984dfe95c3ac405bfc8ead = $('<div id="html_5a0b6b961a984dfe95c3ac405bfc8ead" style="width: 100.0%; height: 100.0%;">Station ID: USC00513117<br>Elev: 14.6</div>')[0];
+                popup_83151a91b05a4f6d9c3a1f82db786a0a.setContent(html_5a0b6b961a984dfe95c3ac405bfc8ead);
+            
+
+            marker_830d2016b2394ec5a79902d9d2d47825.bindPopup(popup_83151a91b05a4f6d9c3a1f82db786a0a)
+            ;
+
+            
+        
+    
+        var marker_186d9075232c40ffb2fb5095cedc4456 = L.marker(
+            [21.521300000000306, -157.83740000000103],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_0232f00a005941d19d535375a49aef45 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_17489ba954b840b1b24d942334a3c20e = $('<div id="html_17489ba954b840b1b24d942334a3c20e" style="width: 100.0%; height: 100.0%;">Station ID: USC00514830<br>Elev: 7.0</div>')[0];
+                popup_0232f00a005941d19d535375a49aef45.setContent(html_17489ba954b840b1b24d942334a3c20e);
+            
+
+            marker_186d9075232c40ffb2fb5095cedc4456.bindPopup(popup_0232f00a005941d19d535375a49aef45)
+            ;
+
+            
+        
+    
+        var marker_23a282d192424496ae22a52c75bc539b = L.marker(
+            [21.333100000001338, -157.80249999999438],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_0b31569989044f458ef586551e48209d = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_52e4fd9b5f4d4dc3a97f6e09d9ac787d = $('<div id="html_52e4fd9b5f4d4dc3a97f6e09d9ac787d" style="width: 100.0%; height: 100.0%;">Station ID: USC00516128<br>Elev: 152.4</div>')[0];
+                popup_0b31569989044f458ef586551e48209d.setContent(html_52e4fd9b5f4d4dc3a97f6e09d9ac787d);
+            
+
+            marker_23a282d192424496ae22a52c75bc539b.bindPopup(popup_0b31569989044f458ef586551e48209d)
+            ;
+
+            
+        
+    
+        var marker_1589bf70b9cb4e3fa0c7b14eef214317 = L.marker(
+            [21.393400000000586, -157.9751000000034],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_a861cc0b735741fcbef345d31132ac7f = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_1137404fe5b949f1996930783205b9e2 = $('<div id="html_1137404fe5b949f1996930783205b9e2" style="width: 100.0%; height: 100.0%;">Station ID: USC00517948<br>Elev: 11.9</div>')[0];
+                popup_a861cc0b735741fcbef345d31132ac7f.setContent(html_1137404fe5b949f1996930783205b9e2);
+            
+
+            marker_1589bf70b9cb4e3fa0c7b14eef214317.bindPopup(popup_a861cc0b735741fcbef345d31132ac7f)
+            ;
+
+            
+        
+    
+        var marker_1bf7a7e3ef0a45bbb6509fc209acf13a = L.marker(
+            [21.499200000000158, -158.0111000000019],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_a92c34b67c4141c4a2351d5b9e490473 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_31512f6a7fa646cfa093ce567b1f673b = $('<div id="html_31512f6a7fa646cfa093ce567b1f673b" style="width: 100.0%; height: 100.0%;">Station ID: USC00518838<br>Elev: 306.6</div>')[0];
+                popup_a92c34b67c4141c4a2351d5b9e490473.setContent(html_31512f6a7fa646cfa093ce567b1f673b);
+            
+
+            marker_1bf7a7e3ef0a45bbb6509fc209acf13a.bindPopup(popup_a92c34b67c4141c4a2351d5b9e490473)
+            ;
+
+            
+        
+    
+        var marker_737265cb6d0d443ab8a2b42739ff0c53 = L.marker(
+            [21.451670000000664, -157.84889000000655],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_e81f37197ceb455fb686348510b676e2 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_74d6635908f54c93bf223b85daefb784 = $('<div id="html_74d6635908f54c93bf223b85daefb784" style="width: 100.0%; height: 100.0%;">Station ID: USC00519281<br>Elev: 32.9</div>')[0];
+                popup_e81f37197ceb455fb686348510b676e2.setContent(html_74d6635908f54c93bf223b85daefb784);
+            
+
+            marker_737265cb6d0d443ab8a2b42739ff0c53.bindPopup(popup_e81f37197ceb455fb686348510b676e2)
+            ;
+
+            
+        
+    
+        var marker_ea69adda3f1b41ce916c16e1c8a2bc32 = L.marker(
+            [21.27160000000003, -157.81679999998914],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_77570fadc859427d91f2246a788f7d13 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_719e9d0069aa469080a3798be9dd06ae = $('<div id="html_719e9d0069aa469080a3798be9dd06ae" style="width: 100.0%; height: 100.0%;">Station ID: USC00519397<br>Elev: 3.0</div>')[0];
+                popup_77570fadc859427d91f2246a788f7d13.setContent(html_719e9d0069aa469080a3798be9dd06ae);
+            
+
+            marker_ea69adda3f1b41ce916c16e1c8a2bc32.bindPopup(popup_77570fadc859427d91f2246a788f7d13)
+            ;
+
+            
+        
+    
+        var marker_c34e5d699cbb46139d41c6f769e7c4ec = L.marker(
+            [21.33555999999963, -157.71139000000704],
+            {
+                icon: new L.Icon.Default()
+                }
+            ).addTo(feature_group_e08a4e9efc6444909152cc996dab93d7);
+        
+    
+            var popup_cf602a16bfe942e787fdcaa22d19a985 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_a9ef2bed327e4f5493a0c57e87b45d66 = $('<div id="html_a9ef2bed327e4f5493a0c57e87b45d66" style="width: 100.0%; height: 100.0%;">Station ID: USC00519523<br>Elev: 19.5</div>')[0];
+                popup_cf602a16bfe942e787fdcaa22d19a985.setContent(html_a9ef2bed327e4f5493a0c57e87b45d66);
+            
+
+            marker_c34e5d699cbb46139d41c6f769e7c4ec.bindPopup(popup_cf602a16bfe942e787fdcaa22d19a985)
+            ;
+
+            
+        
+</script>
