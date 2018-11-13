@@ -58,41 +58,74 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start_date><br/>"
-        f"/api/v1.0/<start>/<end>"
+        f"/api/v1.0/<br/>"
+        f"/api/v2.0/"
     )
 
 
 @app.route("/api/v1.0/precipitation")
 def rain():
-    """Returns precipitation results."""
-    # Query all precipitation data
-    results = session.query(Measurement).all()
+    """Returns precipitation results for 1 year from the last record."""
+
+    # Query the last record in the list
+    Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    end_date = Latest_date[0]
     
-    all_rain = []
-    for precipitation in results:
-        precipitation_dict = {}
-        precipitation_dict["date"] = precipitation.date
-        precipitation_dict["precipitation"] = precipitation.prcp
-        all_rain.append(precipitation_dict)
+    # Estimate the date for 1 year ago
+    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), int(end_date[8:11])) - dt.timedelta(days = 365)
+    
+    # Query all precipitation data
+    results = session.query(Measurement.date, Measurement.station, Measurement.prcp).\
+              order_by(Measurement.date).filter(Measurement.date > year_ago).all()
+    
+    # Organise query object contents into a nested dictionary
+        # Main dictionary key is row[0], which contains dates
+        # Subdictionary keys are in row[1], which contains station ids
+        # Values are in row[2], which contains precipitation records  
+    rain = []
+    prcp_dict = {}
+    for row in results:
+        if row[0] not in prcp_dict:
+            prcp_dict[row[0]] = {}
+        prcp_dict[row[0]][row[1]] = row[2]
+    rain.append(prcp_dict)
         
-    return jsonify(all_rain)   
+    return jsonify(rain)   
 
 
 @app.route("/api/v1.0/stations")
 def stns():
     """Returns a list of weather stations."""
-    # Query all weather stations
-    results = session.query(Measurement.station).group_by(Measurement.station).all()
+    # Query information about the weather stations
+    sel = [Measurement.station, Station.name, Station.elevation, 
+           Station.latitude, Station.longitude]
+
+    results = session.query(*sel).filter(Measurement.station == Station.station).\
+              group_by(Measurement.station).all()
     
-    # Convert list of tuples into a regular list
-    all_stns = list(np.ravel(results)) 
+    # Organise query object contents into a nested dictionary
+        # Main dictionary key is row[0], which contains station ids
+        # Subdictionary keys are: 
+            # row[1], station name
+            # row[2], station elevation
+            # row[3], latitude
+            # row[4], longitude
+    stations = []
+    all_stns = {}
+    for row in results:
+        if row[0] not in all_stns:
+            all_stns[row[0]] = {}
+            all_stns[row[0]]["name"] = row[1]
+            all_stns[row[0]]["elevation"] = row[2]
+            all_stns[row[0]]["lat"] = row[3]
+            all_stns[row[0]]["lng"] = row[4]
+    stations.append(all_stns)
     
-    return jsonify(all_stns)
+    return jsonify(stations)
     
 
 @app.route("/api/v1.0/tobs")
-def temp():
+def tobs():
     """Returns observed temperature records for 1 year from the last record."""
     # Query the last record in the list
     Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
@@ -102,17 +135,22 @@ def temp():
     year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), int(end_date[8:11])) - dt.timedelta(days = 365)
     
     # Query the temperature records for the last 365 days
-    results = session.query(Measurement).filter(Measurement.date > year_ago).all()
+    results = session.query(Measurement.date, Measurement.station, Measurement.tobs).\
+              filter(Measurement.date > year_ago).all()
     
-    all_tobs = []
-    for temp in results:
-        temp_dict = {}
-        temp_dict["date"] = temp.date
-        temp_dict["temp_obs"] = temp.tobs
-        
-        all_tobs.append(temp_dict)
-           
-    return jsonify(all_tobs)
+    # Organise query object contents into a nested dictionary
+        # Main dictionary key is row[0], which contains dates
+        # Subdictionary key is row[1], which contains station ids
+        # Values are in row[2], which contains tobs (observed temperature)
+    temps = []
+    all_tobs = {}
+    for row in results:
+        if row[0] not in all_tobs:
+            all_tobs[row[0]] = {}
+        all_tobs[row[0]][row[1]] = row[2]
+    temps.append(all_tobs)   
+    
+    return jsonify(temps)
 
 
 @app.route("/api/v1.0/") 
@@ -138,7 +176,9 @@ def report_start():
     
     else:
         # Query for results if date values are valid
-        results2 = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= start_date).all()
+        results2 = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), 
+        func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), 
+        func.max(Measurement.prcp)).filter(Measurement.date >= start_date).all()
     
         all_weather = []
         for data in results2:
@@ -154,7 +194,7 @@ def report_start():
             return jsonify(all_weather)
         
 
-@app.route("/v2.0/") 
+@app.route("/api/v2.0/") 
 def report_start_end():
     """Provide the start and the end dates."""
     start_date = request.args.get("startdate") # If key doesn't exist, return None.
@@ -164,10 +204,37 @@ def report_start_end():
     results = session.query(Measurement.date).all()
     results_list = [date[0] for date in results]
     
-    if start_date not in results_list or end_date not in results_list:
-        return f"Dates are not in the list. Try again."
+    if start_date not in results_list:
+        return f"The start date has no record. Try again."
     else:
-        return f"Aha!"
+        if end_date not in results_list:
+            return f"The end date has no record. Try again."
+        else:
+            if start_date > end_date:
+                return(
+                    f"WARNING: Your tropical paradise vacation *cannot* end before it starts.<br/>" 
+                    f"Try different start and end dates."
+                )
+            else:
+                # Query for results if date values are valid
+                results2 = session.query(func.min(Measurement.tobs), 
+                func.avg(Measurement.tobs), func.max(Measurement.tobs), 
+                func.min(Measurement.prcp), func.avg(Measurement.prcp), 
+                func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
+                filter(Measurement.date <= end_date).all()
+
+                all_weather2 = []
+                for data in results2:
+                    data_dict = {}
+                    data_dict["TempF min"] = int(data[0])
+                    data_dict["TempF avg"] = int(data[1])
+                    data_dict["TempF max"] = int(data[2])
+                    data_dict["Precipitation min"] = round(data[3],2)
+                    data_dict["Precipitation avg"] = round(data[4],2)
+                    data_dict["Precipitation max"] = round(data[5],2)
+                    all_weather2.append(data_dict)
+    
+                return jsonify(all_weather2)
     
 
 if __name__ == '__main__':
