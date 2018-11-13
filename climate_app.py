@@ -58,7 +58,7 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<startdate><br/>"
+        f"/api/v1.0/<start_date><br/>"
         f"/api/v1.0/<start>/<end>"
     )
 
@@ -115,33 +115,60 @@ def temp():
     return jsonify(all_tobs)
 
 
-@app.route("/api/v1.0/<startdate>")
-def weather_date(startdate):
-    """Returns the weather data from start date to the last date in the record.
-    
-       Args:
-           startdate (string): A date string in the format of %Y-%m-%d.
+@app.route("/api/v1.0/") 
+def report_start():
+    """Returns minimum, maximum, & average temperatures & precipitation values from start date onwards.
+       First validates the date indicated by the user. Then returns the summary weather stats.
        
-       Outputs:
-           min, avg, and max for precipitation and temperature.
+       Args:
+           start_date (string): A date value that follows the %Y-%m-%d format.
+       
+       Output:
+           min, max, avg for temperature and precipitation.
     """
     
-    # Query the records from startdate onwards
-    results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= startdate).all()
+    start_date = request.args.get("startdate")
     
-    all_weather = []
-    for data in results:
-        data_dict = {}
-        data_dict["TempF min"] = int(data[0])
-        data_dict["TempF avg"] = int(data[1])
-        data_dict["TempF max"] = int(data[2])
-        data_dict["Precipitation min"] = data[3]
-        data_dict["Precipitation avg"] = round(data[4],2)
-        data_dict["Precipitation max"] = data[5]
-        all_weather.append(data_dict)
+    # Query for the dates to validate user-input dates
+    results = session.query(Measurement.date).all()
+    results_list = [date[0] for date in results]
     
-    return jsonify(all_weather)
+    if start_date not in results_list:
+        return "Date not found. Please try again."
+    
+    else:
+        # Query for results if date values are valid
+        results2 = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= start_date).all()
+    
+        all_weather = []
+        for data in results2:
+            data_dict = {}
+            data_dict["TempF min"] = int(data[0])
+            data_dict["TempF avg"] = int(data[1])
+            data_dict["TempF max"] = int(data[2])
+            data_dict["Precipitation min"] = round(data[3],2)
+            data_dict["Precipitation avg"] = round(data[4],2)
+            data_dict["Precipitation max"] = round(data[5],2)
+            all_weather.append(data_dict)
+    
+            return jsonify(all_weather)
+        
 
+@app.route("/v2.0/") 
+def report_start_end():
+    """Provide the start and the end dates."""
+    start_date = request.args.get("startdate") # If key doesn't exist, return None.
+    end_date = request.args.get("enddate") # If key doesn't exist, return None.
+    
+    # Query the validity of the dates
+    results = session.query(Measurement.date).all()
+    results_list = [date[0] for date in results]
+    
+    if start_date not in results_list or end_date not in results_list:
+        return f"Dates are not in the list. Try again."
+    else:
+        return f"Aha!"
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
