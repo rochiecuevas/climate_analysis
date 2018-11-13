@@ -53,13 +53,13 @@ app = Flask(__name__)
 def welcome():
     """List all available api routes."""
     return (
-        f"Welcome to the climate app! Today we explore precipitation and temperature in Oahu.<br/><br/>"
+        f"Welcome to the climate app! Today we explore precipitation and \
+        temperature in Oahu, HI.<br/><br/>"
         f"Available Routes:<br/><br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
         f"/api/v1.0/<br/>"
-        f"/api/v2.0/"
     )
 
 
@@ -68,11 +68,13 @@ def rain():
     """Returns precipitation results for 1 year from the last record."""
 
     # Query the last record in the list
-    Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).\
+                  first()
     end_date = Latest_date[0]
     
     # Estimate the date for 1 year ago
-    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), int(end_date[8:11])) - dt.timedelta(days = 365)
+    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), 
+               int(end_date[8:11])) - dt.timedelta(days = 365)
     
     # Query all precipitation data
     results = session.query(Measurement.date, Measurement.station, Measurement.prcp).\
@@ -128,11 +130,13 @@ def stns():
 def tobs():
     """Returns observed temperature records for 1 year from the last record."""
     # Query the last record in the list
-    Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    Latest_date = session.query(Measurement.date).\
+                  order_by(Measurement.date.desc()).first()
     end_date = Latest_date[0]
     
     # Estimate the date for 1 year ago
-    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), int(end_date[8:11])) - dt.timedelta(days = 365)
+    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), 
+              int(end_date[8:11])) - dt.timedelta(days = 365)
     
     # Query the temperature records for the last 365 days
     results = session.query(Measurement.date, Measurement.station, Measurement.tobs).\
@@ -154,90 +158,6 @@ def tobs():
 
 
 @app.route("/api/v1.0/") 
-def report_start():
-    """Returns minimum, maximum, & average temperatures & precipitation values from start date onwards.
-       First validates the date indicated by the user. Then returns the summary weather stats.
-       
-       Args:
-           start_date (string): A date value that follows the %Y-%m-%d format.
-       
-       Output:
-           min, max, avg for temperature and precipitation.
-    """
-    
-    start_date = request.args.get("startdate")
-    
-    # Query for the dates to validate user-input dates
-    results = session.query(Measurement.date).all()
-    results_list = [date[0] for date in results]
-    
-    if start_date not in results_list:
-        return "Date not found. Please try again."
-    
-    else:
-        # Query for results if date values are valid
-        results2 = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), 
-        func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), 
-        func.max(Measurement.prcp)).filter(Measurement.date >= start_date).all()
-    
-        all_weather = []
-        for data in results2:
-            data_dict = {}
-            data_dict["TempF min"] = int(data[0])
-            data_dict["TempF avg"] = int(data[1])
-            data_dict["TempF max"] = int(data[2])
-            data_dict["Precipitation min"] = round(data[3],2)
-            data_dict["Precipitation avg"] = round(data[4],2)
-            data_dict["Precipitation max"] = round(data[5],2)
-            all_weather.append(data_dict)
-    
-            return jsonify(all_weather)
-        
-
-@app.route("/api/v2.0/") 
-def report_start_end():
-    """Provide the start and the end dates."""
-    start_date = request.args.get["startdate"] 
-    end_date = request.args.get("enddate") 
-    
-    # Query the validity of the dates
-    results = session.query(Measurement.date).all()
-    results_list = [date[0] for date in results]
-    
-    if start_date not in results_list:
-        return f"The start date has no record. Try again."
-    else:
-        if end_date not in results_list:
-            return f"The end date has no record. Try again."
-        else:
-            if start_date > end_date:
-                return(
-                    f"WARNING: Your tropical paradise vacation *cannot* end before it starts.<br/>" 
-                    f"Try different start and end dates."
-                )
-            else:
-                # Query for results if date values are valid
-                results2 = session.query(func.min(Measurement.tobs), 
-                func.avg(Measurement.tobs), func.max(Measurement.tobs), 
-                func.min(Measurement.prcp), func.avg(Measurement.prcp), 
-                func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
-                filter(Measurement.date <= end_date).all()
-
-                all_weather2 = []
-                for data in results2:
-                    data_dict = {}
-                    data_dict["TempF min"] = int(data[0])
-                    data_dict["TempF avg"] = int(data[1])
-                    data_dict["TempF max"] = int(data[2])
-                    data_dict["Precipitation min"] = round(data[3],2)
-                    data_dict["Precipitation avg"] = round(data[4],2)
-                    data_dict["Precipitation max"] = round(data[5],2)
-                    all_weather2.append(data_dict)
-    
-                return jsonify(all_weather2)
-    
-
-@app.route("/query-example") 
 def weather_reports():
 
     # Provide start and end dates for the analysis
@@ -252,14 +172,21 @@ def weather_reports():
     results_list = [date[0] for date in results]
 
     if start_date not in results_list:
-        return("Pick another start date.")
+        # Return the earliest date in the dataframe
+        Earliest_date = session.query(Measurement.date).\
+                        order_by(Measurement.date.asc()).first()
+        first_date = Earliest_date[0]
+        first_date
+
+        return(f"Pick another start date... anything on or after {first_date}.")
 
     if end_date not in results_list and end_date is not None:
         return("Pick another end date.")    
 
     if end_date is None:
         # Query the last record in the list
-        Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+        Latest_date = session.query(Measurement.date).\
+                      order_by(Measurement.date.desc()).first()
         end_date = Latest_date[0]
         
         # Query for results if date values are valid
