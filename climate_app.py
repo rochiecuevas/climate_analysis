@@ -15,7 +15,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, inspect, distinct
 
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 
 #################################################
 # Database Setup
@@ -58,7 +58,7 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
+        f"/api/v1.0/<startdate><br/>"
         f"/api/v1.0/<start>/<end>"
     )
 
@@ -113,6 +113,34 @@ def temp():
         all_tobs.append(temp_dict)
            
     return jsonify(all_tobs)
+
+
+@app.route("/api/v1.0/<startdate>")
+def weather_date(startdate):
+    """Returns the weather data from start date to the last date in the record.
+    
+       Args:
+           startdate (string): A date string in the format of %Y-%m-%d.
+       
+       Outputs:
+           min, avg, and max for precipitation and temperature.
+    """
+    
+    # Query the records from startdate onwards
+    results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs), func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= startdate).all()
+    
+    all_weather = []
+    for data in results:
+        data_dict = {}
+        data_dict["TempF min"] = int(data[0])
+        data_dict["TempF avg"] = int(data[1])
+        data_dict["TempF max"] = int(data[2])
+        data_dict["Precipitation min"] = data[3]
+        data_dict["Precipitation avg"] = round(data[4],2)
+        data_dict["Precipitation max"] = data[5]
+        all_weather.append(data_dict)
+    
+    return jsonify(all_weather)
 
 
 if __name__ == '__main__':
