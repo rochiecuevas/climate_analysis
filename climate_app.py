@@ -252,26 +252,48 @@ def weather_reports():
     results_list = [date[0] for date in results]
 
     if start_date not in results_list:
-        return("Start again.")
+        return("Pick another start date.")
+
+    if end_date not in results_list and end_date is not None:
+        return("Pick another end date.")    
 
     if end_date is None:
         # Query the last record in the list
         Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
         end_date = Latest_date[0]
-        return(f"Last vacation day: {end_date}")
+        
+        # Query for results if date values are valid
+        results2 = session.query(func.min(Measurement.tobs), 
+        func.avg(Measurement.tobs), func.max(Measurement.tobs), 
+        func.min(Measurement.prcp), func.avg(Measurement.prcp), 
+        func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
+        filter(Measurement.date <= end_date).all()
+
+        all_weather2 = []
+        for data in results2:
+            data_dict = {}
+            data_dict["TempF min"] = int(data[0])
+            data_dict["TempF avg"] = int(data[1])
+            data_dict["TempF max"] = int(data[2])
+            data_dict["Precipitation min"] = round(data[3],2)
+            data_dict["Precipitation avg"] = round(data[4],2)
+            data_dict["Precipitation max"] = round(data[5],2)
+        all_weather2.append(data_dict)
+    
+        return jsonify(all_weather2)
     
     if end_date < start_date:
         return("Vacation cannot start before it ends. Enter a new end date.")
 
     # Query for results if date values are valid
-    results2 = session.query(func.min(Measurement.tobs), 
+    results3 = session.query(func.min(Measurement.tobs), 
     func.avg(Measurement.tobs), func.max(Measurement.tobs), 
     func.min(Measurement.prcp), func.avg(Measurement.prcp), 
     func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
     filter(Measurement.date <= end_date).all()
 
-    all_weather2 = []
-    for data in results2:
+    all_weather3 = []
+    for data in results3:
         data_dict = {}
         data_dict["TempF min"] = int(data[0])
         data_dict["TempF avg"] = int(data[1])
@@ -279,9 +301,9 @@ def weather_reports():
         data_dict["Precipitation min"] = round(data[3],2)
         data_dict["Precipitation avg"] = round(data[4],2)
         data_dict["Precipitation max"] = round(data[5],2)
-    all_weather2.append(data_dict)
+    all_weather3.append(data_dict)
     
-    return jsonify(all_weather2)     
+    return jsonify(all_weather3)     
     
 
 if __name__ == '__main__':
