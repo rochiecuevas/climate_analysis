@@ -2,10 +2,6 @@
 # Dependencies
 #################################################
 
-# Packages for data processing and preliminary analyses
-import numpy as np
-import pandas as pd
-
 # Package for handling time data
 import datetime as dt
 
@@ -21,7 +17,7 @@ from flask import Flask, request, jsonify
 # Database Setup
 #################################################
 
-engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+engine = create_engine("sqlite:///Resources/hawaii.sqlite", echo = False)
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -38,6 +34,18 @@ Station = Base.classes.station
 
 # Create our session (link) from Python to the DB
 session = Session(engine)
+
+# Establish the dates for the last year on record
+last_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()[0]
+
+first_date = session.query(Measurement.date).order_by(Measurement.date.asc()).first()[0]
+
+year_ago = dt.date(int(last_date[0:4]), int(last_date[5:7]), int(last_date[8:10])) - dt.timedelta(days = 365)
+
+# Create a list of dates
+dates = session.query(Measurement.date).all()
+date_list = [row[0] for row in dates]
+session.close()
 
 #################################################
 # Flask Setup
@@ -56,43 +64,11 @@ def welcome():
         f"Welcome to the climate app! Today we explore precipitation and \
         temperature in Oahu, HI.<br/><br/>"
         f"Available Routes:<br/><br/>"
-        f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
+        f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<br/>"
+        f"/api/v1.0/<startdate><br/>"
     )
-
-
-@app.route("/api/v1.0/precipitation")
-def rain():
-    """Returns precipitation results for 1 year from the last record."""
-
-    # Query the last record in the list
-    Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).\
-                  first()
-    end_date = Latest_date[0]
-    
-    # Estimate the date for 1 year ago
-    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), 
-               int(end_date[8:11])) - dt.timedelta(days = 365)
-    
-    # Query all precipitation data
-    results = session.query(Measurement.date, Measurement.station, Measurement.prcp).\
-              order_by(Measurement.date).filter(Measurement.date > year_ago).all()
-    
-    # Organise query object contents into a nested dictionary
-        # Main dictionary key is row[0], which contains dates
-        # Subdictionary keys are in row[1], which contains station ids
-        # Values are in row[2], which contains precipitation records  
-    rain = []
-    prcp_dict = {}
-    for row in results:
-        if row[0] not in prcp_dict:
-            prcp_dict[row[0]] = {}
-        prcp_dict[row[0]][row[1]] = row[2]
-    rain.append(prcp_dict)
-        
-    return jsonify(rain)   
 
 
 @app.route("/api/v1.0/stations")
@@ -102,8 +78,7 @@ def stns():
     sel = [Measurement.station, Station.name, Station.elevation, 
            Station.latitude, Station.longitude]
 
-    results = session.query(*sel).filter(Measurement.station == Station.station).\
-              group_by(Measurement.station).all()
+    results = session.query(*sel).filter(Measurement.station == Station.station).group_by(Measurement.station).all()
     
     # Organise query object contents into a nested dictionary
         # Main dictionary key is row[0], which contains station ids
@@ -124,115 +99,109 @@ def stns():
     stations.append(all_stns)
     
     return jsonify(stations)
-    
+    session.close()    
 
-@app.route("/api/v1.0/tobs")
+
+@app.route("/api/v1.0/tobs")    
 def tobs():
     """Returns observed temperature records for 1 year from the last record."""
-    # Query the last record in the list
-    Latest_date = session.query(Measurement.date).\
-                  order_by(Measurement.date.desc()).first()
-    end_date = Latest_date[0]
+
+    # Query the database for records
+    sel = [Measurement.date, Measurement.station, Measurement.tobs]
     
-    # Estimate the date for 1 year ago
-    year_ago = dt.date(int(end_date[0:4]), int(end_date[5:7]), 
-              int(end_date[8:11])) - dt.timedelta(days = 365)
+    results = session.query(*sel).filter(Measurement.date > year_ago).all()
+
+    temp_dict = {}
+    for row in results:
+        if row[0] not in temp_dict:
+            temp_dict[row[0]] = {}
+        temp_dict[row[0]][row[1]] = row[2]
+
+    temps_list = [temp_dict]        
     
-    # Query the temperature records for the last 365 days
-    results = session.query(Measurement.date, Measurement.station, Measurement.tobs).\
-              filter(Measurement.date > year_ago).all()
+    return jsonify(temps_list)
+    session.close() 
+    
+@app.route("/api/v1.0/precipitation")
+def rain():
+    """Returns precipitation results for 1 year from the last record."""
+
+    # Query all precipitation data
+    results = session.query(Measurement.date, Measurement.station, Measurement.prcp).order_by(Measurement.date).filter(Measurement.date > year_ago).all()
     
     # Organise query object contents into a nested dictionary
         # Main dictionary key is row[0], which contains dates
-        # Subdictionary key is row[1], which contains station ids
-        # Values are in row[2], which contains tobs (observed temperature)
-    temps = []
-    all_tobs = {}
+        # Subdictionary keys are in row[1], which contains station ids
+        # Values are in row[2], which contains precipitation records  
+    rain = []
+    prcp_dict = {}
     for row in results:
-        if row[0] not in all_tobs:
-            all_tobs[row[0]] = {}
-        all_tobs[row[0]][row[1]] = row[2]
-    temps.append(all_tobs)   
-    
-    return jsonify(temps)
-
-
-@app.route("/api/v1.0/") 
-def weather_reports():
-
-    # Provide start and end dates for the analysis
-    start_date = request.args.get("startdate") 
-    end_date = request.args.get("enddate")
-
-    if start_date is None:
-        return("Enter a start date.")
-
-    # Validate start date
-    results = session.query(Measurement.date).all()
-    results_list = [date[0] for date in results]
-
-    if start_date not in results_list:
-        # Return the earliest date in the dataframe
-        Earliest_date = session.query(Measurement.date).\
-                        order_by(Measurement.date.asc()).first()
-        first_date = Earliest_date[0]
-        first_date
-
-        return(f"Pick another start date... anything on or after {first_date}.")
-
-    if end_date not in results_list and end_date is not None:
-        return("Pick another end date.")    
-
-    if end_date is None:
-        # Query the last record in the list
-        Latest_date = session.query(Measurement.date).\
-                      order_by(Measurement.date.desc()).first()
-        end_date = Latest_date[0]
+        if row[0] not in prcp_dict:
+            prcp_dict[row[0]] = {}
+        prcp_dict[row[0]][row[1]] = row[2]
+    rain.append(prcp_dict)
         
-        # Query for results if date values are valid
-        results2 = session.query(func.min(Measurement.tobs), 
-        func.avg(Measurement.tobs), func.max(Measurement.tobs), 
-        func.min(Measurement.prcp), func.avg(Measurement.prcp), 
-        func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
-        filter(Measurement.date <= end_date).all()
+    return jsonify(rain)      
+    session.close()     
 
-        all_weather2 = []
-        for data in results2:
-            data_dict = {}
-            data_dict["TempF min"] = int(data[0])
-            data_dict["TempF avg"] = int(data[1])
-            data_dict["TempF max"] = int(data[2])
-            data_dict["Precipitation min"] = round(data[3],2)
-            data_dict["Precipitation avg"] = round(data[4],2)
-            data_dict["Precipitation max"] = round(data[5],2)
-        all_weather2.append(data_dict)
-    
-        return jsonify(all_weather2)
-    
-    if end_date < start_date:
-        return("Vacation cannot start before it ends. Enter a new end date.")
 
-    # Query for results if date values are valid
-    results3 = session.query(func.min(Measurement.tobs), 
-    func.avg(Measurement.tobs), func.max(Measurement.tobs), 
-    func.min(Measurement.prcp), func.avg(Measurement.prcp), 
-    func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
-    filter(Measurement.date <= end_date).all()
-
-    all_weather3 = []
-    for data in results3:
-        data_dict = {}
-        data_dict["TempF min"] = int(data[0])
-        data_dict["TempF avg"] = int(data[1])
-        data_dict["TempF max"] = int(data[2])
-        data_dict["Precipitation min"] = round(data[3],2)
-        data_dict["Precipitation avg"] = round(data[4],2)
-        data_dict["Precipitation max"] = round(data[5],2)
-    all_weather3.append(data_dict)
-    
-    return jsonify(all_weather3)     
-    
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/api/v1.0/<startdate>") 
+def weather_reports(startdate):
+    if startdate not in date_list:
+        return(f"You need to select a valid date. It has to be on or after {first_date}.")
+    else:
+        # Query the results from the startdate to the last date on record
+        sel = [func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp), func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
         
+        results = session.query(*sel).filter(Measurement.date >= startdate).all()
+
+        # Create a dictionary containing the results
+        weather_dict = {}            
+        for row in results:
+            weather_dict["date_01"] = startdate
+            weather_dict["date_02"] = last_date
+            weather_dict["tempF_min"] = round(row[3], 2)
+            weather_dict["tempF_avg"] = round(row[4], 2)
+            weather_dict["tempF_max"] = round(row[5], 2)               
+            weather_dict["precipitation_min"] = round(row[0], 2)
+            weather_dict["precipitation_avg"] = round(row[1], 2)
+            weather_dict["precipitation_max"] = round(row[2], 2)
+        weather_list = [weather_dict]    
+        
+        return jsonify (weather_list)
+        session.close()
+
+@app.route("/api/v1.0/<startdate>/<enddate>") 
+def weather_reports2(startdate, enddate):
+    
+    # Check if the startdate is in the date_list
+    if startdate not in date_list:
+        return(f"You need to select a valid date. It has to be on or after {first_date}.")
+    else:
+        if enddate not in date_list:
+            return(f"You need to select a valid date. It has to be on or before {last_date}.")   
+        else:
+            if enddate < startdate:
+                return ("Your vacation cannot end before it starts. Pick another end date.")
+            else:
+                # List the variables that will be queried
+                sel = [func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp), func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
+
+                # Query the weather data for the range set by the start and the end dates
+                results = session.query(*sel).filter(Measurement.date >= startdate).filter(Measurement.date <= enddate).all()
+
+                # Create a dictionary containing the results
+                weather_dict = {}
+                for row in results:
+                    weather_dict["date_01"] = startdate
+                    weather_dict["date_02"] = enddate
+                    weather_dict["tempF_min"] = round(row[3], 2)
+                    weather_dict["tempF_avg"] = round(row[4], 2)
+                    weather_dict["tempF_max"] = round(row[5], 2)
+                    weather_dict["precipitation_min"] = round(row[0], 2)
+                    weather_dict["precipitation_avg"] = round(row[1], 2)
+                    weather_dict["precipitation_max"] = round(row[2], 2)
+                weather_list = [weather_dict]    
+
+                return jsonify (weather_list)    
+                session.close()
