@@ -100,4 +100,20 @@ most_active_stn = stn_count[0][0]
 ```
 
 ### Weather data for the most active station
-Once the most active station was identified, the precipitation and temperature summary statistics for this station was determined 
+Once the most active station was identified, the precipitation and temperature summary statistics (minimum, maximum, and average) for this station was determined, covering the last year of the database's records.
+
+```python
+# Calculate the minimum, average, and maximum temperature and precipitation in the most active station in the last year on record
+sel3 = [func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp), 
+        func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
+
+summary_weather = session.query(*sel3).filter(Measurement.station == most_active_stn).\
+filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
+
+prcp_min = round(summary_weather[0][0], 1)
+prcp_avg = round(summary_weather[0][1], 1)
+prcp_max = round(summary_weather[0][2], 1)
+temp_min = round(summary_weather[0][3], 1)
+temp_avg = round(summary_weather[0][4], 1)
+temp_max = round(summary_weather[0][5], 1)
+```

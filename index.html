@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang = "en-us">
+    <head>
+        <meta charset = "UTF-8">
+        <style>
+            body {
+                margin: 20px;
+                border: 20px;
+                padding: 20px;
+            }
+            table {
+                border-collapse: collapse;
+                width; 100%;
+            }
+            td, th {
+                border: 1px solid #D3D3D3; 
+                padding: 8px;
+            }
+        </style>
+        <title>Climate Analysis</title>
+    </head>
+    <body>
+        <!-- Insights -->
+        <h1>What's the weather like in O'ahu?</h1>
+        <h2>Introduction</h2>
+        <hr>
+        <h2>Approach</h2>
+        <hr>
+        <h2>Results</h2>
+        
+        <h3>The date coverage</h3>
+        <p>The database contains records from January 1, 2010 to August 23, 2017. The last year included in the database was calculated to begin on August 23, 2016.</p>
+        
+        <h3>The weather stations</h3>
+        <p>Data from nine weather stations were used to look into the trends in precipitation and temperature in O'ahu. These weather stations are found mostly in the south, east, and central part of the island (Fig 1).</p>
+        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/map_markers.png?raw=True" alt = "map-markers", width = "100%"/>
+        <figcaption><i>Fig 1. Locations of the nine weather stations included in the database.</i></figcaption>
+        <p>The weather stations have different elevations. The weather station with the lowest elevation, Honolulu Observatory is located near Ewa Beach in the south. On the other hand, the weather station with the highest elevation, Upper Wahiawa 874.3, is located in the plateau between the Waianae range (to the west) and the Koolau range (to the east). <a href = "https://www.gohawaii.com/islands/oahu/travel-info/maps">These mountain ranges used to be shield volcanoes</a>.</p>
+        <table>
+            <caption align = "left"><i>Table 1. Weather station elevation and geographical coordinates.</i></caption>
+            <thead>
+                <tr>
+                    <th>Station ID</th> <th>Station Name</th> <th>Elevation</th> <th>Latitude</th> <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USC00519397</td> <td>Waikiki 717.2</td> <td align = "right">3.0</td> <td>21.2716</td> <td>-157.8168</td>
+                </tr>
+                <tr>
+                    <td>USC00513117</td> <td>Kaneohe 838.1</td> <td align = "right">14.6</td> <td>21.4234</td> <td>-157.8168</td>
+                </tr>
+                <tr>
+                    <td>USC00514830</td> <td>Kualoa Ranch HQ 886.9</td> <td align = "right">7.0</td> <td>21.5213</td> <td>-157.8374</td>
+                </tr>
+                <tr>
+                    <td>USC00517948</td> <td>Pearl City</td> <td align = "right">11.9</td> <td>21.3934</td> <td>-157.9751</td>
+                </tr>
+                <tr>
+                    <td>USC00518838</td> <td>Upper Wahiawa 874.3</td> <td align = "right">306.6</td> <td>21.4992</td> <td>-158.0111</td>
+                </tr>
+                <tr>
+                    <td>USC00519523</td> <td>Waimanalo Experimental Farm</td> <td align = "right">19.5</td> <td>21.33556</td> <td>-157.7114</td>
+                </tr>
+                <tr>
+                    <td>USC00519281</td> <td>Waihee 837.5</td> <td align = "right">32.9</td> <td>21.45167</td> <td>-157.8489</td>
+                </tr>
+                <tr>
+                    <td>USC00511918</td> <td>Honolulu Observatory 702.2</td> <td align = "right">0.9</td> <td>21.3152</td> <td>-157.9992</td>
+                </tr>
+                <tr>
+                    <td>USC00516128</td> <td>Manoa Lyon Arboretum 785.2</td> <td align = "right">152.4</td> <td>21.3331</td> <td>-157.8025</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>From January 1, 2010 to August 23, 2017, the Manoa Lyon Arboretum (Station ID: USC00516128) had the highest average precipitation among the nine weather stations (Fig 2). On the other hand, the Honolulu Observatory (Station ID: USC00511918) had the lowest range of precipitation levels. The ranges indicate that precipitation levels in O'ahu are heavily localised; for instance, Manoa and Honolulu are only three miles away from each other, yet Manoa had more precipitation than Honolulu. It must be noted that Manoa is located at the base of the Ko'olau Range, on the <a href = "https://oceanservice.noaa.gov/facts/windward-leeward.html">windward side</a> of the island. This area is wetter than the leeward side because the trade winds bring mosture to the windward side of the island. On the other hand, Honolulu is located on the <a href = "https://www.fs.fed.us/land/ecosysmgmt/colorimagemap/images/m423.html">leeward side</a> of the Ko'olau Range; hence, it experiences drier conditions due to the rain-shadow effect.</p>
+        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_precipitation.png?raw=True" alt = "rain_stations" width = "100%"/>
+        <figcaption><i>Fig 2. Precipitation ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
+        <p>On the other hand, the average temperature was highest in Waikiki 717.2 (Station ID: USC00519397) at 74.87 °F and lowest in Manoa Lyon Arboretum (Station ID: USC00516128) at 70.92 °F. Results indicated that the median temperatures (Fig 3) hovered around the mid-70s. It is possible that the rainforest location of the Manoa weather station drove the temperature down. The other stations might exposed to more sunlight (because these are not found inside forests); hence, the higher temperature records.</p>
+        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_temp.png?raw=True" alt = "temp_stations" width = "100%"/>
+        <figcaption><i>Fig 3. Temperature ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
+        <p>Analysis revealed that the weather station with highest number of observations, making it the most active among the stations in the database, is Waihee 837.5 (Station ID: USC00519281). It had 2,772 records between August 23, 2016 to August 23, 2017. </p>
+        <table>
+            <caption><i>Table 2. Summary statistics for Waihee 837.5</i></caption>
+            <thead>
+                <th></th>
+                <th>Precipitation (in)</th>
+                <th>Temperature (°F)</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Min</td> <td align = "right">0.0</td> <td align = "right">59.0</td>
+                </tr>
+                <tr>
+                    <td>Avg</td> <td align = "right">0.2</td> <td align = "right">73.1</td>
+                </tr>
+                <tr>
+                    <td>Max</td> <td align = "right">3.0</td> <td align = "right">83.0</td>
+                </tr>
+            </tbody>
+        </table>
+        <p></p>
+    </body>
+</html>
