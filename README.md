@@ -155,3 +155,16 @@ pptn_df["mean"].index = pd.to_datetime(pptn_df["mean"].index) # string to dateti
 pptn_df.index = pptn_df["mean"].to_period(freq = "D").index # time stamps to daily time periods
 pptn_df.index
 ```
+
+The timeseries plot was then generated.
+
+```python
+# Timeseries plot by a daily frequency
+pptn_df.plot(y = "mean", figsize = (15,8), legend = False)
+plt.xlabel("Date", fontsize = 16)
+plt.ylabel("Average Precipitation", fontsize = 16)
+plt.tight_layout()
+plt.savefig("Images/pptn.svg")
+plt.savefig("Images/pptn.png")
+```
+
