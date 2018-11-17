@@ -5,6 +5,7 @@ Hawaii is an archipelago of [volcanic islands](https://oceanservice.noaa.gov/fac
 <br><br>
 When is the best time to visit O'ahu? A factor that certainly contributes to one's decision is the weather. In this study, I explored the weather patterns (indicated by precipitation and temperature). A case study is presented in which the weather during my vacation there is indicated.
 ## Method
-Data was obtained from nine weather stations located in the 
+Data was obtained from nine weather stations located in the central and the southern parts of the island.
+![map_markers](https://github.com/rochiecuevas/climate_analysis/blob/master/Images/map_markers.png).
 ## Case study
 
