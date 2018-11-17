@@ -53,6 +53,30 @@ same_stn = session.query(*sel).filter(Measurement.station == Station.station).al
 df1 = pd.DataFrame(same_stn)
 ```
 
+The ranges of temperatures and precipitation levels per weather station could be visualised using box plots.
+
+```python
+# Visualise the precipitation ranges per weather station
+b = df1.boxplot(by="station", column = ["prcp"], figsize = (15,8))
+plt.xticks(rotation = 90)
+plt.xlabel("Station", fontsize = 16)
+plt.ylabel("Precipitation (in)", fontsize = 16)
+plt.ylim(-0.1,2)
+plt.title("")
+plt.suptitle("")
+plt.tight_layout()
+
+# Visualise the temperature ranges per weather station
+b = df1.boxplot(by="station", column = ["tobs"], figsize = (15,8))
+plt.xticks(rotation = 90)
+plt.xlabel("Station", fontsize = 16)
+plt.ylabel("Temperature (°F)", fontsize = 16)
+plt.ylim(50,100)
+plt.title("")
+plt.suptitle("")
+plt.tight_layout()
+```
+
 The data was then grouped by `station id` and the means of precipitation, `prcp`, and temperature, `tobs`, were calculated.
 
 ```python
