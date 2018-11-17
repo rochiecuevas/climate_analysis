@@ -85,7 +85,6 @@ grouped_df1 = df1.groupby("station").mean()
 grouped_df1 = grouped_df1.reset_index()
 ```
 
-### Most active station
 A new query was created to determine the most active among the nine stations.
 
 ```python
@@ -99,7 +98,6 @@ stn_count = session.query(*sel2).group_by(Measurement.station).order_by(func.cou
 most_active_stn = stn_count[0][0]
 ```
 
-### Weather data for the most active station
 Once the most active station was identified, the precipitation and temperature summary statistics (minimum, maximum, and average) for this station was determined, covering the last year of the database's records.
 
 ```python
@@ -116,4 +114,44 @@ prcp_max = round(summary_weather[0][2], 1)
 temp_min = round(summary_weather[0][3], 1)
 temp_avg = round(summary_weather[0][4], 1)
 temp_max = round(summary_weather[0][5], 1)
+```
+
+### Precipitation in O'ahu for the last 12 months
+To determine the mean daily precipitation levels, a query covering the last year in the database was created. This was then converted into a dataframe, and summary statistics were calculated by date.
+
+```python
+# Select the columns for the analyses
+sel4 = [Measurement.date, Measurement.station, Measurement.prcp]
+
+# Perform a query to retrieve the total observations and precipitation measurements
+data = session.query(*sel4).filter(Measurement.date > year_ago).all()
+
+# Save the query results as a Pandas DataFrame and set the index to the date column
+df2 = pd.DataFrame(data)
+df2 = df.sort_values("date", ascending = True) # Sort the dataframe by date
+df2 = df.set_index("date")
+
+# Use Pandas to calculate the summary statistics for precipitation
+grouped = df2.groupby("date").describe()
+```
+
+The mean and the standard deviations were retained from the subsequent dataframe.
+
+```python
+# Use the mean and the standard deviations for precipitation
+pptn_df = grouped["prcp"].iloc[:, 1:3]
+```
+
+The dates were in string format, hence, these needed to be converted to datetime in preparation for visualising precipitation in a timeseries plot. Since each date actually represented a period of one day, the dates were further converted to the period data type.
+
+```python
+# Data type of the date
+pptn_df.index.values.dtype
+
+# Date is currently set as string; need to convert to datetime and then to period format
+# Resource: http://earthpy.org/time_series_analysis_with_pandas_part_2.html
+
+pptn_df["mean"].index = pd.to_datetime(pptn_df["mean"].index) # string to datetime
+pptn_df.index = pptn_df["mean"].to_period(freq = "D").index # time stamps to daily time periods
+pptn_df.index
 ```
