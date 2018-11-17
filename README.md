@@ -14,6 +14,7 @@ Fig 1. Location of the weather stations in O'ahu.
 These stations are found in different elevations (Table 1). The weather station with the lowest elevation, Honolulu Observatory is located near Ewa Beach. On the other hand, the weather station with the highest elevation, Upper Wahiawa 874.3, is located in the plateau between the Waianae range (to the west) and the Koolau range (to the east). [These mountain ranges used to be shield volcanoes](https://www.gohawaii.com/islands/oahu/travel-info/maps).
 <br><br>
 Table 1. Elevations of the different weather stations in O'ahu
+
 |Station ID|Station Name|Elevation (masl)|
 |---|---|---|
 |USC00519397|Waikiki 717.2|3.0|
@@ -25,5 +26,6 @@ Table 1. Elevations of the different weather stations in O'ahu
 |USC00519281| Waihee 837.5|32.9|
 |USC00511918| Honolulu Observatory 702.2|0.9|
 |USC00516128| Manoa Lyon Arboretum 785.2|152.4|
+
 ## Case study
 
