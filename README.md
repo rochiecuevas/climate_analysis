@@ -27,7 +27,22 @@ Table 1. Elevations of the different weather stations in O'ahu
 |USC00511918| Honolulu Observatory 702.2|0.9|
 |USC00516128| Manoa Lyon Arboretum 785.2|152.4|
 
-Daily weather data (precipitation and temperature) were obtained from these weather stations and stored in the  `hawaii.sqlite` database. The data was then retrieved using [SQLAlchemy](https://www.sqlalchemy.org/) and processed using Python ([version 3.6.6](https://www.python.org/downloads/release/python-366/)). Data was processed using [pandas](https://pandas.pydata.org/pandas-docs/stable/) and [numpy](http://www.numpy.org/) modules, and visualised using [matplotlib](https://matplotlib.org/contents.html) and [seaborn](https://seaborn.pydata.org/) modules.
-
+<br>Daily weather data (precipitation and temperature) were obtained from these weather stations and stored in the  `hawaii.sqlite` database. This database consists of two tables: `Measurements` and `Stations`. The data was then reflected into Python ([version 3.6.6](https://www.python.org/downloads/release/python-366/)) using [SQLAlchemy](https://www.sqlalchemy.org/). Data was processed using [pandas](https://pandas.pydata.org/pandas-docs/stable/), [numpy](http://www.numpy.org/), and [datetime](https://docs.python.org/3/library/datetime.html) modules. Data visualisation was  performed using [matplotlib](https://matplotlib.org/contents.html) and [seaborn](https://seaborn.pydata.org/) modules.
+<br><br>
+  
 ## Case study
+The database contains weather data from January 1, 2010 to August 23, 2017.
+
+```python
+# Return the earliest date in the dataframe
+Earliest_date = session.query(Measurement.date).order_by(Measurement.date.asc()).first()
+first_date = Earliest_date[0]
+first_date
+
+# Return the latest date in the dataframe
+Latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+end_date = Latest_date[0]
+end_date
+```
+
 
