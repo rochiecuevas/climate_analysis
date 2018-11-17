@@ -8,7 +8,6 @@ When is the best time to visit O'ahu? A factor that certainly contributes to one
 ## Method
 Daily weather data (precipitation and temperature) were obtained from these weather stations and stored in the  `hawaii.sqlite` database. This database consists of two tables: `Measurements` and `Stations`. The data was then reflected into Python ([version 3.6.6](https://www.python.org/downloads/release/python-366/)) using [SQLAlchemy](https://www.sqlalchemy.org/). Data was processed using [pandas](https://pandas.pydata.org/pandas-docs/stable/), [numpy](http://www.numpy.org/), and [datetime](https://docs.python.org/3/library/datetime.html) modules. Data visualisation was  performed using [folium](http://python-visualization.github.io/folium/docs-v0.5.0/modules.html), [matplotlib](https://matplotlib.org/contents.html) and [seaborn](https://seaborn.pydata.org/) modules.
 
- 
 ### Database date range
 To determine the date range, the earliest date was retrieved from the database and then sorted in ascending order; the date of the latest record was also determined by retrieving the dates from the database and then sorting the dates in descending order.
 
@@ -75,3 +74,6 @@ stn_count = session.query(*sel2).group_by(Measurement.station).order_by(func.cou
 # Select the most active station (most number of measurements)
 most_active_stn = stn_count[0][0]
 ```
+
+### Weather data for the most active station
+Once the most active station was identified, the precipitation and temperature summary statistics for this station was determined 
