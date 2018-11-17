@@ -16,7 +16,7 @@ These stations are found in different elevations (Table 1). The weather station 
 Table 1. Elevations of the different weather stations in O'ahu
 
 |Station ID|Station Name|Elevation (masl)|
-|---|---|---|
+|---|---|---:|
 |USC00519397|Waikiki 717.2|3.0|
 |USC00513117|Kaneohe 838.1|14.6|
 |USC00514830|Kualoa Ranch HQ 886.9|7.0|
@@ -26,6 +26,8 @@ Table 1. Elevations of the different weather stations in O'ahu
 |USC00519281| Waihee 837.5|32.9|
 |USC00511918| Honolulu Observatory 702.2|0.9|
 |USC00516128| Manoa Lyon Arboretum 785.2|152.4|
+<br><br>
+Daily weather data (precipitation and temperature) were obtained from these weather stations and stored in the  `hawaii.sqlite` database. The data was then retrieved using [SQLAlchemy](https://www.sqlalchemy.org/) and processed using Python ([version 3.6.6](https://www.python.org/downloads/release/python-366/)). Data was processed using [pandas](https://pandas.pydata.org/pandas-docs/stable/) and [numpy](http://www.numpy.org/) modules, and visualised using [matplotlib](https://matplotlib.org/contents.html) and [seaborn](https://seaborn.pydata.org/) modules.
 
 ## Case study
 
