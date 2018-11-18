@@ -356,7 +356,7 @@ The daily normals (i.e., the average, minimum, and maximum values per day across
 
 ```python
 # Use the start and end date to create a range of dates
-dates = session.query(Measurement.date).     filter(Measurement.date >= vac_start).filter(Measurement.date <= vac_end).group_by(Measurement.date).all()
+dates = session.query(Measurement.date).filter(Measurement.date >= vac_start).filter(Measurement.date <= vac_end).group_by(Measurement.date).all()
 
 # List of dates
 date_range = [date[0] for date in dates]
