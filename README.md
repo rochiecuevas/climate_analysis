@@ -1,4 +1,4 @@
-# What's the weather like in Oahu, HI?
+# What's the weather like in O'ahu, HI?
 
 ## Introduction
 Hawaii is an archipelago of [volcanic islands](https://oceanservice.noaa.gov/facts/hawaii.html) in the north Pacific Ocean. It is a popular tourist destination all year round. There are [eight main islands](https://en.wikipedia.org/wiki/List_of_islands_of_Hawaii): Hawai'i, Maui, Kaho'olawe, Lana'i, Moloka'i, O'ahu, Kaua'i, and Ni'ihau. O'ahu is the [third largest](https://traveltips.usatoday.com/8-large-islands-hawaii-108082.html) island in the archipelago and one with varied geographies. It features a plateau in between two parallel mountain ranges. [It is widely known](https://www.britannica.com/place/Oahu) for its place in modern military history, its tourism, and its pineapples. 
@@ -135,11 +135,11 @@ df2 = df.set_index("date")
 grouped = df2.groupby("date").describe()
 ```
 
-The mean and the standard deviations were retained from the subsequent dataframe.
+The total daily precipitation across weather stations were calculated and used for the timeseries plot.
 
 ```python
 # Use the mean and the standard deviations for precipitation
-pptn_df = grouped["prcp"].iloc[:, 1:3]
+pptn_df = df2.groupby("date").sum()
 ```
 
 The dates were in string format, hence, these needed to be converted to datetime in preparation for visualising precipitation in a timeseries plot. Since each date actually represented a period of one day, the dates were further converted to the period data type.
@@ -151,8 +151,8 @@ pptn_df.index.values.dtype
 # Date is currently set as string; need to convert to datetime and then to period format
 # Resource: http://earthpy.org/time_series_analysis_with_pandas_part_2.html
 
-pptn_df["mean"].index = pd.to_datetime(pptn_df["mean"].index) # string to datetime
-pptn_df.index = pptn_df["mean"].to_period(freq = "D").index # time stamps to daily time periods
+pptn_df["prcp"].index = pd.to_datetime(pptn_df["prcp"].index) # string to datetime
+pptn_df.index = pptn_df["prcp"].to_period(freq = "D").index # time stamps to daily time periods
 pptn_df.index
 ```
 
@@ -160,11 +160,61 @@ The timeseries plot was then generated.
 
 ```python
 # Timeseries plot by a daily frequency
-pptn_df.plot(y = "mean", figsize = (15,8), legend = False)
+pptn_df.plot(y = "prcp", figsize = (15,8), legend = False)
 plt.xlabel("Date", fontsize = 16)
-plt.ylabel("Average Precipitation", fontsize = 16)
+plt.ylabel("Daily Precipitation (in)", fontsize = 16)
 plt.tight_layout()
 plt.savefig("Images/pptn.svg")
 plt.savefig("Images/pptn.png")
+```
+
+However, the pattern was not very clear when viewed at a daily basis. To determine monthly patterns, the mean was recalculated from the data resampled on a monthly basis.
+
+```python
+# Get the mean by month
+pptn_df_monthly_avg = pptn_df.iloc[:, 0:1].resample("M").mean() 
+```
+
+This could then be viewed in a line chart in which the x-axis contained the months and the y-axis contained the precipitation levels. A trendline and its equation were displayed to show patterns in precipitation over time.
+
+```python
+# Monthly precipitation averages for one year
+x = np.arange(len(pptn_df_monthly_avg.index))
+y = pptn_df_monthly_avg["prcp"].values
+plt.figure(figsize = (15,8))
+plt.plot(x, y, marker = "o", markersize = 12, color = "red")
+
+# Calculate the trendline (linear fitting)
+# Resource: http://widu.tumblr.com/post/43624347354/matplotlib-trendline
+z = np.polyfit(x, y, 1) 
+p = np.poly1d(z)
+plt.plot(x, p(x),"b--")
+
+# the line equation:
+equation = (f"y = %.3fx + %.3f"%(z[0],z[1]))
+
+# Plot attributes
+plt.text(-0.55,0.22, equation, fontsize = 16)
+plt.ylabel("Average Precipitation", fontsize = 16)
+plt.xlabel("Month", fontsize = 16)
+plt.xticks(x, pptn_df_monthly_avg.index.values, rotation = 45)
+plt.tight_layout()
+plt.savefig("Images/pptn_monthly_avg.svg")
+plt.savefig("Images/pptn_monthly_avg.png")
+```
+
+To get more information about precipitation patterns, a kernel distribution plot, overlaid with a rug plot, was generated.
+
+```python
+# Precipitation distribution
+plt.figure(figsize = (15,8))
+sns.distplot(pptn_df["prcp"], kde = True, hist = False, rug = True,
+             kde_kws = {"shade": True, "linewidth": 3},
+             rug_kws = {"color": "black"})
+plt.xlabel("Precipitation (in)", fontsize = 16)
+plt.ylabel("Density", fontsize = 16)
+plt.tight_layout()
+plt.savefig("Images/density_precipitation.svg")
+plt.savefig("Images/density_precipitation.png")
 ```
 
