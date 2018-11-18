@@ -4,9 +4,9 @@
         <meta charset = "UTF-8">
         <style>
             body {
-                margin: 20px;
-                border: 20px;
-                padding: 20px;
+                margin: 30px;
+                border: 30px;
+                padding: 30px;
             }
             table {
                 border-collapse: collapse;
@@ -16,145 +16,235 @@
                 border: 1px solid #D3D3D3; 
                 padding: 8px;
             }
+
+            p {
+                padding-bottom: 15px;
+            }
+
+            figcaption {
+                padding: 10px;
+            }
+            .sidenav {
+                width: 150px;
+                position: fixed;
+                z-index = 1;
+                top: 100px;
+                left: 20px;
+                background: #eee;
+                overflow-x: hidden;
+                padding: 8px 8px 0 0;
+            }
+            .sidenav a {
+                padding: 16px 16px, 16px, 16px;
+                text-decoration: none;
+                font-size: 20px;
+                color: indigo;
+                display: block;
+            }
+            .main {
+                margin-left: 140px;
+                font-size: 20px;
+                padding: 0px 10px;
+            }
         </style>
         <title>Climate Analysis</title>
     </head>
+    
     <body>
-        <!-- Insights -->
-        <h1>When to take the Hawaiian vacation?</h1>
+        <!-- Side Navigation Bar -->
+        <div class = "sidenav">
+            <a href = "#abstract">1. Abstract</a>
+            <a href = "#intro">2. Introduction</a>
+            <a href = "#methods">3. Approach</a>
+            <a href = "#results">4. Results</a>
+        </div>
 
-        <h2>Abstract</h2>
+        <div class = "main">
+            <!-- Insights -->
+            <h1>When to take <i>that</i> Hawaiian vacation?</h1>
 
-        <p>Weather is one of the factors in picking when to take a destination vacation and what kind of activites to engage in while there, especially in a remote tropical island such as O'ahu, Hawaii. Historical data, from 2010 to 2017, obtained from nine weather stations both in the windward and the leeward sides of the island, were used to establish the weather patterns in the last year of records included in the database. Results indicated that the average temperature across the island was relatively constant but precipitation was more variable. The temperature was lowest in January to February 2017 and was highest in September 2016 and 2017. </p>
+            <!-- Abstract -->
+            <div id = "abstract">
+                <h2>Abstract</h2>
 
-        <h2>Introduction</h2>
+                <p>Weather is one of the factors in picking when to take a destination vacation and what kind of activites to engage in while there, especially in a remote tropical island such as O'ahu, Hawaii. Historical data, from 2010 to 2017, obtained from nine weather stations both in the windward and the leeward sides of the island, were used to establish the weather patterns in the last year of records included in the database. Results indicated that the average temperature across the island was relatively constant but precipitation was more variable. The temperature was lowest in January to February 2017 and was highest in September 2016 and 2017. </p>
+            </div>
+            <hr>
 
-        <p>Hawaii is a tropical island paradise found in the north Pacific Ocean. It has eight main islands; O'ahu is the <a href = "https://en.wikipedia.org/wiki/Oahu">third largest</a> and the most populous among these islands. Its geography features two mountain ranges: the <a href = "https://www.britannica.com/place/Koolau-Range">Ko'olau range</a> in the east and the <a href = "https://www.britannica.com/place/Waianae-Range">Waianae range</a> to the west. In between the two mountain ranges is the central <a href = "https://www.gohawaii.com/islands/oahu/regions/central-oahu">Leilehua Plateau</a>, an agricultural region which had plantations known best for <a href = "http://media.gohawaii.com/oahu/press-room/press-releases/central-oahu-fact-sheet-pdf/">pineapple</a>. With its beautiful beaches, lush rainforests and plantations, and rich history, O'ahu has a lot of attractions to offer tourists with different interests. Aside from difficulty with choosing which activity to do first, a tourist's real challenge is to figure out the best time to visit the island.</p>
-        <p>A way that may help in selecting one's trip date is to consider historical weather patterns. In this study, a database–containing eight years' worth of precipitation and temperature readings from different weather stations in O'ahu–was used to explore weather trends. </p>
-        <hr>
+            <!-- Introduction -->
+            <div id = "intro">
+                <h2>Introduction</h2>
 
-        <h2>Approach</h2>
+                <p>Hawaii is a tropical island paradise found in the north Pacific Ocean. It has eight main islands; O'ahu is the <a href = "https://en.wikipedia.org/wiki/Oahu">third largest</a> and the most populous among these islands. Its geography features two mountain ranges: the <a href = "https://www.britannica.com/place/Koolau-Range">Ko'olau range</a> in the east and the <a href = "https://www.britannica.com/place/Waianae-Range">Waianae range</a> to the west. In between the two mountain ranges is the central <a href = "https://www.gohawaii.com/islands/oahu/regions/central-oahu">Leilehua Plateau</a>, an agricultural region which had plantations known best for <a href = "http://media.gohawaii.com/oahu/press-room/press-releases/central-oahu-fact-sheet-pdf/">pineapple</a>. With its beautiful beaches, lush rainforests and plantations, and rich history, O'ahu has a lot of attractions to offer tourists with different interests. Aside from difficulty with choosing which activity to do first, a tourist's real challenge is to figure out the best time to visit the island.</p>
+                <p>A way that may help in selecting one's trip date is to consider historical weather patterns. In this study, a database–containing eight years' worth of precipitation and temperature readings from different weather stations in O'ahu–was used to explore weather trends. </p>
+            </div>
+            <hr>
 
-        <p>A sqlite database with two tables ("Measurements" and "Stations") contained temperature and precipitation records from weather stations in O'ahu, Hawaii. The data was accessed through <a href = "https://www.sqlalchemy.org/">SQLAlchemy</a> and processed using <a href = "https://www.python.org/downloads/release/python-366/">Python (version 3.6.6)</a> modules <a href = "http://www.numpy.org/">numpy</a>, <a href = "https://docs.python.org/3/library/datetime.html">datetime</a>, and <a href = "https://pandas.pydata.org/pandas-docs/stable/">pandas</a>. Visualisation was conducted using <a href = "http://python-visualization.github.io/folium/docs-v0.5.0/modules.html">folium</a>, <a href = "https://matplotlib.org/contents.html">matplotlib</a>, and <a href = "https://seaborn.pydata.org/">seaborn</a>.</p>
-        <hr>
-        
-        <h2>Results</h2>
-        
-        <!-- Database Coverage -->
-        <h3><i>nā lā</i>: Dates included in the database</h3>
-        <p>The database contains records from January 1, 2010 to August 23, 2017. The last year included in the database was calculated to begin on August 23, 2016.</p>
-        
-        <!-- Weather Station Analysis -->
-        <h3><i>Manawa</i>: The records from the weather stations</h3>
-        <p>Data from nine weather stations were used to look into the trends in precipitation and temperature in O'ahu. These weather stations are found mostly in the south, east, and central part of the island (Fig 1).</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/map_markers.png?raw=True" alt = "map-markers", width = "100%"/>
-        <figcaption><i>Fig 1. Locations of the nine weather stations included in the database.</i></figcaption>
-        <p>The weather stations have different elevations. The weather station with the lowest elevation, Honolulu Observatory is located near Ewa Beach in the south. On the other hand, the weather station with the highest elevation, Upper Wahiawa 874.3, is located in the plateau between the Waianae range (to the west) and the Ko'olau range (to the east). <a href = "https://www.gohawaii.com/islands/oahu/travel-info/maps">These mountain ranges used to be shield volcanoes</a>.</p>
-        <table>
-            <caption align = "left"><i>Table 1. Weather station elevation and geographical coordinates.</i></caption>
-            <thead>
-                <tr>
-                    <th>Station ID</th> <th>Station Name</th> <th>Elevation</th> <th>Latitude</th> <th>Longitude</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>USC00519397</td> <td>Waikiki 717.2</td> <td align = "right">3.0</td> <td>21.2716</td> <td>-157.8168</td>
-                </tr>
-                <tr>
-                    <td>USC00513117</td> <td>Kaneohe 838.1</td> <td align = "right">14.6</td> <td>21.4234</td> <td>-157.8168</td>
-                </tr>
-                <tr>
-                    <td>USC00514830</td> <td>Kualoa Ranch HQ 886.9</td> <td align = "right">7.0</td> <td>21.5213</td> <td>-157.8374</td>
-                </tr>
-                <tr>
-                    <td>USC00517948</td> <td>Pearl City</td> <td align = "right">11.9</td> <td>21.3934</td> <td>-157.9751</td>
-                </tr>
-                <tr>
-                    <td>USC00518838</td> <td>Upper Wahiawa 874.3</td> <td align = "right">306.6</td> <td>21.4992</td> <td>-158.0111</td>
-                </tr>
-                <tr>
-                    <td>USC00519523</td> <td>Waimanalo Experimental Farm</td> <td align = "right">19.5</td> <td>21.33556</td> <td>-157.7114</td>
-                </tr>
-                <tr>
-                    <td>USC00519281</td> <td>Waihee 837.5</td> <td align = "right">32.9</td> <td>21.45167</td> <td>-157.8489</td>
-                </tr>
-                <tr>
-                    <td>USC00511918</td> <td>Honolulu Observatory 702.2</td> <td align = "right">0.9</td> <td>21.3152</td> <td>-157.9992</td>
-                </tr>
-                <tr>
-                    <td>USC00516128</td> <td>Manoa Lyon Arboretum 785.2</td> <td align = "right">152.4</td> <td>21.3331</td> <td>-157.8025</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>From January 1, 2010 to August 23, 2017, the Manoa Lyon Arboretum (Station ID: USC00516128) had the highest average precipitation among the nine weather stations (Fig 2). On the other hand, the Honolulu Observatory (Station ID: USC00511918) had the lowest range of precipitation levels. The ranges indicate that precipitation levels in O'ahu are heavily localised; for instance, Manoa and Honolulu are only three miles away from each other, yet Manoa had more precipitation than Honolulu. It must be noted that Manoa is located at the base of the Ko'olau Range, on the <a href = "https://oceanservice.noaa.gov/facts/windward-leeward.html">windward side</a> of the island. This area is wetter than the leeward side because the trade winds bring mosture to the windward side of the island. On the other hand, Honolulu is located on the <a href = "https://www.fs.fed.us/land/ecosysmgmt/colorimagemap/images/m423.html">leeward side</a> of the Ko'olau Range; hence, it experiences drier conditions due to the rain-shadow effect.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_precipitation.png?raw=True" alt = "rain_stations" width = "100%"/>
-        <figcaption><i>Fig 2. Precipitation ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
-        <p>On the other hand, the average temperature was highest in Waikiki 717.2 (Station ID: USC00519397) at 74.87 °F and lowest in Manoa Lyon Arboretum (Station ID: USC00516128) at 70.92 °F. Results indicated that the median temperatures (Fig 3) hovered around the mid-70s. It is possible that the rainforest location of the Manoa weather station drove the temperature down. The other stations might exposed to more sunlight (because these are not found inside forests); hence, the slightly higher temperature records. Overall, however, temperature was less variable than precipitation, which agrees with the assessment by the <a href = "https://wrcc.dri.edu/narratives/HAWAII.htm">Western Regional Climate Centre</a>.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_temp.png?raw=True" alt = "temp_stations" width = "100%"/>
-        <figcaption><i>Fig 3. Temperature ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
-        <p>Analysis revealed that the weather station with highest number of observations, making it the most active among the stations in the database, is Waihee 837.5 (Station ID: USC00519281). It had 2,772 records between August 23, 2016 to August 23, 2017. </p>
-        <table>
-            <caption><i>Table 2. Summary statistics for Waihee 837.5</i></caption>
-            <thead>
-                <th></th>
-                <th>Precipitation (in)</th>
-                <th>Temperature (°F)</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Min</td> <td align = "right">0.0</td> <td align = "right">59.0</td>
-                </tr>
-                <tr>
-                    <td>Avg</td> <td align = "right">0.2</td> <td align = "right">73.1</td>
-                </tr>
-                <tr>
-                    <td>Max</td> <td align = "right">3.0</td> <td align = "right">83.0</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <!-- Precipitation Analysis -->
-        <h3><i>kuāua</i>: Precipitation analysis</h3>
-        <p>The precipitation trends seemed to indicate that September 2016 was the wettest month in the last year in the database (Fig 4). The <a href = "http://www.prh.noaa.gov/hnl/hydro/pages/sep16sum.php">weather system</a> around the archipelago was reported to be particularly active at that time, with hurricanes Lester and Madeline, plus other tropical cyclones. The months of October 2016 to January 2017 appeared to be relatively drier than September 2016. Though there were three particularly wet days in the first quarter of 2017, the rain seemed to fall more in April and in May 2017. The longest "dry" spell in O'ahu happened between January and February 2017. Nevertheless, it was clear that it was <i>always</i> raining in O'ahu at any point of the year. No wonder that <i>'ōlelo Hawai'i</i> (the Hawaiian language)has more than <a href = "https://www.hawaiimagazine.com/content/hawaiians-have-more-200-words-rain">200 words</a> for rain.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/pptn.png?raw=True" alt = "rain_12mos" width = "100%"/>
-        <figcaption><i>Fig 4. Daily precipitation levels in O'ahu from August 2016 to August 2017.</i></figcaption>
-        <p>The precipitation pattern became clearer upon plotting monthly values. It seemed like September 2016 was a particularly wet month. In fact, the precipitation trends seem to decrease as the year progressed.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/pptn_monthly_avg.png?raw=True" alt = "rain_monthly" width = "100%"/>
-        <figcaption><i>Fig 5. Monthly precipitation averages from August 2016 to August 2017.</i></figcaption>
-        <p>The distribution of daily precipitation levels indicates that the rainfall was mostly less than one inch (Fig 6). Weather experts have attributed the drier conditions, particularly in June to August 2017, to the <a href = "https://www.climate.gov/news-features/blogs/beyond-data/hawaii-and-pacific-islands-2017-has-been-anything-normal">El Niño Southern Oscillation</a>.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/density_precipitation.png?raw=True" alt = "rain_distribution" width = "100%"/>
-        <figcaption><i>Fig 6. Distrbution of daily precipitation levels in August 2016 to August 2017.</i></figcaption>
-        
-        <!-- Temperature Analysis -->
-        <h3><i>ka wela a me ke anu</i>: Temperature analysis</h3>
-        <p>The data (Fig 7) showed that there was a decrease in daily average temperature as the year closed, typical of a location in the Northern Hemisphere. There were a few days of temperature dips and spikes around February, but the temperature increased in earnest from March onwards.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/tobs.png?raw=True" alt = "temp 12 mos" width = "100%"/>
-        <figcaption><i>Fig 7. Daily temperature averages from August 2016 to August 2017</i></figcaption>
-        <p>Despite the highs and lows in temperature throughout the year, O'ahu never became too hot nor too cold; hence, it remained to be a viable place for vacationers anytime of the year. This histogram (Fig 8) shows clearly that the temperature is actually skewed to the left (i.e., the mean temperature is likely to be <a href = "https://www.siyavula.com/read/maths/grade-11/statistics/11-statistics-05">lower than the median</a>). The kernel distribution (Fig 8), on the other hand, showed that there probably were two overlapping temperature distributions. Perhaps, the temperatures could be clustered into two groups and could probably depend on the season. Or perhaps, be affected by the location of the weather stations.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/hist_temp.png?raw=True" alt = "hist_temperature" width = "50%"/><img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/density_temp.png?raw=True" alt = "kde_temp" width = "50%"/>
-        <figcaption><i>Fig 8. Temperature distributions plotted as a histogram (left) and a kernel density plot (right).</i></figcaption>
-        <p>Results (Fig 9) clearly indicate that when the temperatures were grouped by station, the location variables did not have an apparent relationship with either temperature or precipitation.</p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/scatter_matrix_envi.png?raw=True" alt = "scatter_envi" width = "100%"/>
-        <figcaption><i>Fig 9. Scatterplots matrix of the different metrics studied.</i></figcaption>
-        
-        <!-- Vacation weather -->
-        <h3><i>Hiki mai ka mālie, ā hiki mai nō ka 'ino</i>: The weather when I was in O'ahu</h3>
-        <p>I visited O'ahu (16–20 December 2016) to attend a friend's wedding. But it would be an overly expensive trip if I did not take the chance to roam around the island. So I booked bus tours that would bring me on a trip around the island and one that would allow me to explore Kualoa Ranch; coincidentally, one of the weather stations in this study is located there. I knew that the weather wouldn't be too hot nor too cold so I left my jacket and my hand fan in the hotel in an effort to keep my bag's weight down. Even the weather records showed that my tour around O'ahu would be relatively dry (Table 3).</p>
-        <table>
-            <caption><i>Table 3. Weather conditions, Dec 16–20, 2016</i></caption>
-            <thead>
-                <th></th> <th>Precipitation (in)</th> <th>Temperature (°F)</th>
-            </thead>
-            <tbody>
-                <tr> <td>Min</td> <td align = "right">0.0</td> <td align = "right">60.0</td></tr>
-                <tr> <td>Avg</td> <td align = "right">0.1</td> <td align = "right">71.3</td></tr> 
-                <tr> <td>Max</td> <td align = "right">0.3</td> <td align = "right">78.0</td></tr>
-            </tbody>
-        </table>
-        <p>But that was just a general picture of O'ahu's weather conditions. I quickly learned that this island has some of the most diverse microclimates in the world as I had to pull my foldable umbrella several times to ward off a sudden downpour in one afternoon... particularly at the Kualoa Ranch (Fig 10). I doubt that the sky dumped only 0.3 in of rain on me that day. My trip to O'ahu certainly gave justice to the Hawaiian saying, <a href = "http://ulukau.org/elib/cgi-bin/library?e=d-0ped-000Sec--11en-50-20-frameset-book--1-010escapewin&a=d&d=D0.4&toc=0"><i>"Hiki mai ka mālie, ā hiki mai nō ka 'ino"</i></a>, which means, "Fair weather comes, storms come too." </p>
-        <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/IMG_6883.JPG?raw=True" alt = "Kualoa" width = "100%"/>
-        <figcaption><i>Fig 10. View of Mokoli'i Island from the Hakipu'u rainforest in Kualoa Ranch, right after the rain.</i></figcaption>
-        
+            <!-- Methodology -->
+            <div id = "methods">
+                <h2>Approach</h2>
+
+                <p>A sqlite database with two tables ("Measurements" and "Stations") contained temperature and precipitation records from weather stations in O'ahu, Hawaii. The data was accessed through <a href = "https://www.sqlalchemy.org/">SQLAlchemy</a> and processed using <a href = "https://www.python.org/downloads/release/python-366/">Python (version 3.6.6)</a> modules <a href = "http://www.numpy.org/">numpy</a>, <a href = "https://docs.python.org/3/library/datetime.html">datetime</a>, and <a href = "https://pandas.pydata.org/pandas-docs/stable/">pandas</a>. Visualisation was conducted using <a href = "http://python-visualization.github.io/folium/docs-v0.5.0/modules.html">folium</a>, <a href = "https://matplotlib.org/contents.html">matplotlib</a>, and <a href = "https://seaborn.pydata.org/">seaborn</a>.</p>
+            </div>
+            <hr>
+
+            <!-- Results -->
+            <div id = "results">
+                <h2>Results</h2>
+
+                <!-- Database Coverage -->
+                <h3><i>nā lā</i>: Dates included in the database</h3>
+                
+                <p>The database contains records from January 1, 2010 to August 23, 2017. The last year included in the database was calculated to begin on August 23, 2016.</p>
+
+                <!-- Weather Station Analysis -->
+                <h3><i>Manawa</i>: The records from the weather stations</h3>
+                
+                <p>Data from nine weather stations were used to look into the trends in precipitation and temperature in O'ahu. These weather stations are found mostly in the south, east, and central part of the island (Fig 1).</p>
+                
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/map_markers.png?raw=True" alt = "map-markers", width = "100%"/>
+                
+                <figcaption><i>Fig 1. Locations of the nine weather stations included in the database.</i></figcaption>
+                
+                <p>The weather stations have different elevations. The weather station with the lowest elevation, Honolulu Observatory is located near Ewa Beach in the south. On the other hand, the weather station with the highest elevation, Upper Wahiawa 874.3, is located in the plateau between the Waianae range (to the west) and the Ko'olau range (to the east). <a href = "https://www.gohawaii.com/islands/oahu/travel-info/maps">These mountain ranges used to be shield volcanoes</a>.</p>
+                
+                <table align = "center">
+                    <caption ><i>Table 1. Weather station elevation and geographical coordinates.</i></caption>
+                    <thead>
+                        <tr>
+                            <th>Station ID</th> <th>Station Name</th> <th>Elevation</th> <th>Latitude</th> <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>USC00519397</td> <td>Waikiki 717.2</td> <td align = "right">3.0</td> <td>21.2716</td> <td>-157.8168</td>
+                        </tr>
+                        <tr>
+                            <td>USC00513117</td> <td>Kaneohe 838.1</td> <td align = "right">14.6</td> <td>21.4234</td> <td>-157.8168</td>
+                        </tr>
+                        <tr>
+                            <td>USC00514830</td> <td>Kualoa Ranch HQ 886.9</td> <td align = "right">7.0</td> <td>21.5213</td> <td>-157.8374</td>
+                        </tr>
+                        <tr>
+                            <td>USC00517948</td> <td>Pearl City</td> <td align = "right">11.9</td> <td>21.3934</td> <td>-157.9751</td>
+                        </tr>
+                        <tr>
+                            <td>USC00518838</td> <td>Upper Wahiawa 874.3</td> <td align = "right">306.6</td> <td>21.4992</td> <td>-158.0111</td>
+                        </tr>
+                        <tr>
+                            <td>USC00519523</td> <td>Waimanalo Experimental Farm</td> <td align = "right">19.5</td> <td>21.33556</td> <td>-157.7114</td>
+                        </tr>
+                        <tr>
+                            <td>USC00519281</td> <td>Waihee 837.5</td> <td align = "right">32.9</td> <td>21.45167</td> <td>-157.8489</td>
+                        </tr>
+                        <tr>
+                            <td>USC00511918</td> <td>Honolulu Observatory 702.2</td> <td align = "right">0.9</td> <td>21.3152</td> <td>-157.9992</td>
+                        </tr>
+                        <tr>
+                            <td>USC00516128</td> <td>Manoa Lyon Arboretum 785.2</td> <td align = "right">152.4</td> <td>21.3331</td> <td>-157.8025</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p>From January 1, 2010 to August 23, 2017, the Manoa Lyon Arboretum (Station ID: USC00516128) had the highest average precipitation among the nine weather stations (Fig 2). On the other hand, the Honolulu Observatory (Station ID: USC00511918) had the lowest range of precipitation levels. The ranges indicate that precipitation levels in O'ahu are heavily localised; for instance, Manoa and Honolulu are only three miles away from each other, yet Manoa had more precipitation than Honolulu. It must be noted that Manoa is located at the base of the Ko'olau Range, on the <a href = "https://oceanservice.noaa.gov/facts/windward-leeward.html">windward side</a> of the island. This area is wetter than the leeward side because the trade winds bring mosture to the windward side of the island. On the other hand, Honolulu is located on the <a href = "https://www.fs.fed.us/land/ecosysmgmt/colorimagemap/images/m423.html">leeward side</a> of the Ko'olau Range; hence, it experiences drier conditions due to the rain-shadow effect.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_precipitation.png?raw=True" alt = "rain_stations" width = "100%"/>
+
+                <figcaption><i>Fig 2. Precipitation ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
+
+                <p>On the other hand, the average temperature was highest in Waikiki 717.2 (Station ID: USC00519397) at 74.87 °F and lowest in Manoa Lyon Arboretum (Station ID: USC00516128) at 70.92 °F. Results indicated that the median temperatures (Fig 3) hovered around the mid-70s. It is possible that the rainforest location of the Manoa weather station drove the temperature down. The other stations might exposed to more sunlight (because these are not found inside forests); hence, the slightly higher temperature records. Overall, however, temperature was less variable than precipitation, which agrees with the assessment by the <a href = "https://wrcc.dri.edu/narratives/HAWAII.htm">Western Regional Climate Centre</a>.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/compare_temp.png?raw=True" alt = "temp_stations" width = "100%"/>
+
+                <figcaption><i>Fig 3. Temperature ranges across the nine weather stations from January 2010 to August 2017.</i></figcaption>
+
+                <p>Analysis revealed that the weather station with highest number of observations, making it the most active among the stations in the database, is Waihee 837.5 (Station ID: USC00519281). It had 2,772 records between August 23, 2016 to August 23, 2017. </p>
+
+                <table align = "center">
+                    <caption><i>Table 2. Summary statistics for Waihee 837.5</i></caption>
+                    <thead>
+                        <th></th>
+                        <th>Precipitation (in)</th>
+                        <th>Temperature (°F)</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Min</td> <td align = "right">0.0</td> <td align = "right">59.0</td>
+                        </tr>
+                        <tr>
+                            <td>Avg</td> <td align = "right">0.2</td> <td align = "right">73.1</td>
+                        </tr>
+                        <tr>
+                            <td>Max</td> <td align = "right">3.0</td> <td align = "right">83.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Precipitation Analysis -->
+                <h3><i>kuāua</i>: Precipitation analysis</h3>
+
+                <p>The precipitation trends seemed to indicate that September 2016 was the wettest month in the last year in the database (Fig 4). The <a href = "http://www.prh.noaa.gov/hnl/hydro/pages/sep16sum.php">weather system</a> around the archipelago was reported to be particularly active at that time, with hurricanes Lester and Madeline, plus other tropical cyclones. The months of October 2016 to January 2017 appeared to be relatively drier than September 2016. Though there were three particularly wet days in the first quarter of 2017, the rain seemed to fall more in April and in May 2017. The longest "dry" spell in O'ahu happened between January and February 2017. Nevertheless, it was clear that it was <i>always</i> raining in O'ahu at any point of the year. No wonder that <i>'ōlelo Hawai'i</i> (the Hawaiian language)has more than <a href = "https://www.hawaiimagazine.com/content/hawaiians-have-more-200-words-rain">200 words</a> for rain.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/pptn.png?raw=True" alt = "rain_12mos" width = "100%"/>
+
+                <figcaption><i>Fig 4. Daily precipitation levels in O'ahu from August 2016 to August 2017.</i></figcaption>
+
+                <p>The precipitation pattern became clearer upon plotting monthly values. It seemed like September 2016 was a particularly wet month. In fact, the precipitation trends seem to decrease as the year progressed.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/pptn_monthly_avg.png?raw=True" alt = "rain_monthly" width = "100%"/>
+
+                <figcaption><i>Fig 5. Monthly precipitation averages from August 2016 to August 2017.</i></figcaption>
+
+                <p>The distribution of daily precipitation levels indicates that the rainfall was mostly less than one inch (Fig 6). Weather experts have attributed the drier conditions, particularly in June to August 2017, to the <a href = "https://www.climate.gov/news-features/blogs/beyond-data/hawaii-and-pacific-islands-2017-has-been-anything-normal">El Niño Southern Oscillation</a>.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/density_precipitation.png?raw=True" alt = "rain_distribution" width = "100%"/>
+
+                <figcaption><i>Fig 6. Distrbution of daily precipitation levels in August 2016 to August 2017.</i></figcaption>
+
+                <!-- Temperature Analysis -->
+                <h3><i>ka wela a me ke anu</i>: Temperature analysis</h3>
+
+                <p>The data (Fig 7) showed that there was a decrease in daily average temperature as the year closed, typical of a location in the Northern Hemisphere. There were a few days of temperature dips and spikes around February, but the temperature increased in earnest from March onwards.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/tobs.png?raw=True" alt = "temp 12 mos" width = "100%"/>
+
+                <figcaption><i>Fig 7. Daily temperature averages from August 2016 to August 2017</i></figcaption>
+
+                <p>Despite the highs and lows in temperature throughout the year, O'ahu never became too hot nor too cold; hence, it remained to be a viable place for vacationers anytime of the year. This histogram (Fig 8) shows clearly that the temperature is actually skewed to the left (i.e., the mean temperature is likely to be <a href = "https://www.siyavula.com/read/maths/grade-11/statistics/11-statistics-05">lower than the median</a>). The kernel distribution (Fig 8), on the other hand, showed that there probably were two overlapping temperature distributions. Perhaps, the temperatures could be clustered into two groups and could probably depend on the season. Or perhaps, be affected by the location of the weather stations.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/hist_temp.png?raw=True" alt = "hist_temperature" width = "50%"/><img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/density_temp.png?raw=True" alt = "kde_temp" width = "50%"/>
+
+                <figcaption><i>Fig 8. Temperature distributions plotted as a histogram (left) and a kernel density plot (right).</i></figcaption>
+
+                <p>Results (Fig 9) clearly indicate that when the temperatures were grouped by station, the location variables did not have an apparent relationship with either temperature or precipitation.</p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/scatter_matrix_envi.png?raw=True" alt = "scatter_envi" width = "100%"/>
+
+                <figcaption><i>Fig 9. Scatterplots matrix of the different metrics studied.</i></figcaption>
+
+                <!-- Vacation weather -->
+                <h3><i>Hiki mai ka mālie, ā hiki mai nō ka 'ino</i>: The weather when I was in O'ahu</h3>
+
+                <p>I visited O'ahu (16–20 December 2016) to attend a friend's wedding. But it would be an overly expensive trip if I did not take the chance to roam around the island. So I booked bus tours that would bring me on a trip around the island and one that would allow me to explore Kualoa Ranch; coincidentally, one of the weather stations in this study is located there. I knew that the weather wouldn't be too hot nor too cold so I left my jacket and my hand fan in the hotel in an effort to keep my bag's weight down. Even the weather records showed that my tour around O'ahu would be relatively dry (Table 3).</p>
+                
+                <table align = "center">
+                    <caption><i>Table 3. Weather conditions, Dec 16–20, 2016</i></caption>
+                    <thead>
+                        <th></th> <th>Precipitation (in)</th> <th>Temperature (°F)</th>
+                    </thead>
+                    <tbody>
+                        <tr> <td>Min</td> <td align = "right">0.0</td> <td align = "right">60.0</td></tr>
+                        <tr> <td>Avg</td> <td align = "right">0.1</td> <td align = "right">71.3</td></tr> 
+                        <tr> <td>Max</td> <td align = "right">0.3</td> <td align = "right">78.0</td></tr>
+                    </tbody>
+                </table>
+
+                <p>But that was just a general picture of O'ahu's weather conditions. I quickly learned that this island has some of the most diverse microclimates in the world as I had to pull my foldable umbrella several times to ward off a sudden downpour in one afternoon... particularly at the Kualoa Ranch (Fig 10). I doubt that the sky dumped only 0.3 in of rain on me that day. My trip to O'ahu certainly gave justice to the Hawaiian saying, <a href = "http://ulukau.org/elib/cgi-bin/library?e=d-0ped-000Sec--11en-50-20-frameset-book--1-010escapewin&a=d&d=D0.4&toc=0"><i>"Hiki mai ka mālie, ā hiki mai nō ka 'ino"</i></a>, which means, "Fair weather comes, storms come too." </p>
+
+                <img src = "https://github.com/rochiecuevas/climate_analysis/blob/master/Images/IMG_6883.JPG?raw=True" alt = "Kualoa" width = "100%"/>
+
+                <figcaption><i>Fig 10. View of Mokoli'i Island from the Hakipu'u rainforest in Kualoa Ranch, right after the rain.</i></figcaption>
+            </div>
+        </div>
     </body>
 </html>
