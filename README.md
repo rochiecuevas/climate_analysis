@@ -407,3 +407,5 @@ plt.tight_layout()
 plt.savefig("Images/area_temp_vacation.svg")
 plt.savefig("Images/area_temp_vacation.png")
 ```
+### Results
+Please see the `index.html` file for the results.
