@@ -260,7 +260,7 @@ while True:
     print("What is the start date of your vacation? (yyyy-mm-dd)")
     vac_start = input()
 
-    if vac_start not in list(df3["date"]):
+    if vac_start not in list(df1["date"]):
         print("Please try again. Date is not in the list.\nFollow this format (yyyy-mm-dd): 2016-02-29\n")
     else:
         break
@@ -269,7 +269,7 @@ while True:
     print("What is the end date of your vacation? (yyyy-mm-dd)")
     vac_end = input()
         
-    if vac_end not in list(df3["date"]):
+    if vac_end not in list(df1["date"]):
         print("Please try again. Follow this format (yyyy-mm-dd): 2016-02-29")
     else:
         break
@@ -299,9 +299,7 @@ def calc_weather(start_date, end_date):
         TMIN, TAVG, and TMAX, PMIN, PAVG, and PMAX
     """
     
-    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs),
-                         func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
-                         filter(Measurement.date <= end_date).all()
+    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs),func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 ```
 
 The summary temperature statistics could be plotted as a bar graph, with the bar height representing the average temperature and the y-error bar representing the difference between the maximum and minimum values.
@@ -325,9 +323,7 @@ Then using the difference between Temp<sub>max</sub> and Temp<sub>min</sub> migh
 
 ```python
 # Plot the results from your previous query as a box plot.
-vacation_temp = session.query(Measurement.tobs).\
-                         filter(Measurement.date >= vac_start).\
-                         filter(Measurement.date <= vac_end).all()
+vacation_temp = session.query(Measurement.tobs).filter(Measurement.date >= vac_start).filter(Measurement.date <= vac_end).all()
 
 # Create a list of temperatures recorded during the vacation period
 temps = [temp[0] for temp in vacation_temp]
@@ -349,7 +345,7 @@ sel5 = [Measurement.station, Station.name,
         func.sum(Measurement.prcp).label("rainfall_sum"), 
         Station.elevation, Station.latitude, Station.longitude]
 
-vac_rainfall = session.query(*sel5).filter(Measurement.station == Station.station).  filter(Measurement.date >= vac_start).      filter(Measurement.date <= vac_end).        group_by(Measurement.station).             order_by(func.sum(Measurement.prcp).desc()).all()
+vac_rainfall = session.query(*sel5).filter(Measurement.station == Station.station).filter(Measurement.date >= vac_start).filter(Measurement.date <= vac_end).group_by(Measurement.station).  order_by(func.sum(Measurement.prcp).desc()).all()
 
 pd.DataFrame(vac_rainfall)
 ```
@@ -407,5 +403,35 @@ plt.tight_layout()
 plt.savefig("Images/area_temp_vacation.svg")
 plt.savefig("Images/area_temp_vacation.png")
 ```
+
+### Creating API endpoints through the `climate_app.py`
+API endpoints that show precipitation and temperature data queried using SQLAlchemy from the sqlite database were developed using Flask. In each app route, a function was defined that would return the query object as a "jsonified" list of dictionaries for increased readability. For example, the daily precipitation readings of each weather station for the last 12 months in the database were retrieved as follows:
+
+```python
+@app.route("/api/v1.0/precipitation")
+def rain():
+    """Returns precipitation results for 1 year from the last record."""
+
+    # Query all precipitation data
+    results = session.query(Measurement.date, Measurement.station, Measurement.prcp).order_by(Measurement.date).filter(Measurement.date > year_ago).all()
+    
+    # Organise query object contents into a nested dictionary
+        # Main dictionary key is row[0], which contains dates
+        # Subdictionary keys are in row[1], which contains station ids
+        # Values are in row[2], which contains precipitation records  
+    rain = []
+    prcp_dict = {}
+    for row in results:
+        if row[0] not in prcp_dict:
+            prcp_dict[row[0]] = {}
+        prcp_dict[row[0]][row[1]] = row[2]
+    rain.append(prcp_dict)
+        
+    return jsonify(rain)      
+    session.close()   
+```
+
 ### Results
-Please see the [`index.html`](https://github.com/rochiecuevas/climate_analysis/blob/master/index.html) file for the results.
+Please see the [`index.html`](https://github.com/rochiecuevas/climate_analysis/blob/master/index.html) file for a discussion on the results of exploring the weather patterns in the database.
+
+Please use the Flask app [`climate_app.py`](https://github.com/rochiecuevas/climate_analysis/blob/master/climate_app.py) to see the contents of the database in API format.
