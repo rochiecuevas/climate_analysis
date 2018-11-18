@@ -218,3 +218,192 @@ plt.savefig("Images/density_precipitation.svg")
 plt.savefig("Images/density_precipitation.png")
 ```
 
+### Temperature records in O'ahu for the last 12 months
+The same approach in converting the dates from string to datetime and then to period type was conducted. Instead of getting temperature sums (which is essentially meaningless), daily and monthly average temperatures were obtained. The daily temperature average from the nine weather stations were plotted in a timeseries while the monthly average was plotted in a histogram. It must be noted, however, that histograms might not show a good story because the data analyst plugs in the number of bins.
+
+```python
+# Plot the temperature in a histogram
+# NB: Histograms use arbitrarily set number of bins, which affects the shape of the distribution
+plt.figure(figsize = (15,8))
+plt.hist(tobs_df["mean"], bins = 50, edgecolor = "black")
+plt.xlabel("Temperature (°F)", fontsize = 16)
+plt.ylabel("Frequency", fontsize = 16)
+plt.xlim(60, 85)
+plt.tight_layout()
+plt.savefig("Images/hist_temp.svg")
+plt.savefig("Images/hist_temp.png")
+```
+
+Hence, the data was also plotted as a kernel density plot overlaid with a rug plot. The rug plot shows where each point lies on the x-axis. The thicker the band, the higher the kernel density. 
+
+### Is there a relationship between temperature, precipitation, and location of weather stations?
+Because temperature and precipitation *might* be associated with a weather station's location (latitude, longitude, and elevation in this case), the different variables were plotted into scatterplots to visualise any correlations.
+
+```python
+# Create a scatterplot matrix to show relationships among the environmental variables
+sns.set(font_scale = 1.25)
+g = sns.pairplot(grouped_df1, diag_kind = "kde", diag_kws = dict(shade = True))
+plt.tight_layout()
+plt.savefig("Images/scatter_matrix_envi.svg")
+plt.savefig("Images/scatter_matrix_envi.png")
+```
+
+### Weather conditions during selected date ranges
+To be able to choose the dates, I opted to use inputs in while loops. This allowed me to do a few things:
+1. Validate the start and the end dates (i.e., February 29th is only valid in a leap year)
+2. Check if I get the order of the dates right (i.e., A date range cannot end before it begins)
+3. Check if the dates I chose were included in the database (i.e., The range should be between January 1, 2010 and August 23, 2017)
+
+```python
+# Personal vacation dates, use while loops to make sure that entries are valid.
+while True:
+    print("What is the start date of your vacation? (yyyy-mm-dd)")
+    vac_start = input()
+
+    if vac_start not in list(df3["date"]):
+        print("Please try again. Date is not in the list.\nFollow this format (yyyy-mm-dd): 2016-02-29\n")
+    else:
+        break
+
+while True:        
+    print("What is the end date of your vacation? (yyyy-mm-dd)")
+    vac_end = input()
+        
+    if vac_end not in list(df3["date"]):
+        print("Please try again. Follow this format (yyyy-mm-dd): 2016-02-29")
+    else:
+        break
+
+while vac_start > vac_end:
+    print("\nYour vacation cannot end before it started! Please try again.")
+    
+    print("What is the end date of your vacation? (yyyy-mm-dd)")
+    vac_end = input()
+
+print("Calculating....")
+```
+
+Once the dates were validated and accepted by the program, the temperature and precipitation summaries in the date range indicated were retrieved through a session query function called `calc_temps`.
+
+```python
+# This function called `calc_temps` will accept start date and end date in the format 
+# '%Y-%m-%d' and return the minimum, average, and maximum temperatures for that range of dates
+def calc_weather(start_date, end_date):
+    """TMIN, TAVG, and TMAX, PMIN, PAVG, and PMAX for a list of dates.
+    
+    Args:
+        start_date (string): A date string in the format %Y-%m-%d
+        end_date (string): A date string in the format %Y-%m-%d
+        
+    Returns:
+        TMIN, TAVG, and TMAX, PMIN, PAVG, and PMAX
+    """
+    
+    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs),
+                         func.min(Measurement.prcp), func.avg(Measurement.prcp), func.max(Measurement.prcp)).filter(Measurement.date >= start_date).\
+                         filter(Measurement.date <= end_date).all()
+```
+
+The summary temperature statistics could be plotted as a bar graph, with the bar height representing the average temperature and the y-error bar representing the difference between the maximum and minimum values.
+
+```python
+# Calculate the weather statistics
+summary_vac_weather = calc_weather(vac_start, vac_end)
+
+# Plot the temperature statistics as a bar plot
+yerr = summary_vac_weather[0][2] - summary_vac_weather[0][0]
+
+plt.figure(figsize = (15,8))
+plt.bar(1, summary_vac_weather[0][1], yerr = yerr)
+plt.xlim(0,2)
+plt.ylabel("Temperature (°F)")
+```
+
+However, if<br><br>
+Temp<sub>ave</sub> ≠ Temp<sub>max</sub> - Temp<sub>min</sub><br><br>
+Then using the difference between Temp<sub>max</sub> and Temp<sub>min</sub> might not be appropriate. It is better to visualise the temperature using a box plot.
+
+```python
+# Plot the results from your previous query as a box plot.
+vacation_temp = session.query(Measurement.tobs).\
+                         filter(Measurement.date >= vac_start).\
+                         filter(Measurement.date <= vac_end).all()
+
+# Create a list of temperatures recorded during the vacation period
+temps = [temp[0] for temp in vacation_temp]
+
+# Create box plot to show range of temperatures recorded during the vacation period
+plt.figure(figsize = (15,8))
+plt.boxplot(temps, showmeans = True)
+plt.ylabel(f"Temperature (°F)", fontsize = 16)
+plt.title(f"Temperature range during the vacation period, {vac_start} to {vac_end}", fontsize = 16)
+plt.savefig("Images/box_temperature_vacation.svg")
+plt.savefig("Images/box_temperature_vacation.png")
+```
+
+The total rainfall per weather station during the selected date range was queried and placed in a dataframe.
+
+```python
+# Calculating total rainfall during the vacation using SQLAlchemy
+sel5 = [Measurement.station, Station.name, 
+        func.sum(Measurement.prcp).label("rainfall_sum"), 
+        Station.elevation, Station.latitude, Station.longitude]
+
+vac_rainfall = session.query(*sel5).filter(Measurement.station == Station.station).  filter(Measurement.date >= vac_start).      filter(Measurement.date <= vac_end).        group_by(Measurement.station).             order_by(func.sum(Measurement.prcp).desc()).all()
+
+pd.DataFrame(vac_rainfall)
+```
+
+The daily normals (i.e., the average, minimum, and maximum values per day across years) was also calculated for the selected period using the function `daily_normals`. But because the function accepted month-day combinations, the dates had to be reformatted first.
+
+```python
+# Use the start and end date to create a range of dates
+dates = session.query(Measurement.date).     filter(Measurement.date >= vac_start).filter(Measurement.date <= vac_end).group_by(Measurement.date).all()
+
+# List of dates
+date_range = [date[0] for date in dates]
+
+# Strip off the year and save a list of %m-%d strings
+mm_dd_range = [date[5:10] for date in date_range]
+```
+
+And then the function was used.
+```python
+def daily_normals(date):
+    """Daily Normals.
+    
+    Args:
+        date (str): A date string in the format '%m-%d'
+        
+    Returns:
+        A list of tuples containing the daily normals, tmin, tavg, and tmax
+    
+    """
+    
+    sel = [func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)]
+    return session.query(*sel).filter(func.strftime("%m-%d", Measurement.date) == date).all()
+```
+
+This function was looped through the elements in the list of dates (converted to month-day format).
+
+```python
+# Loop through the list of %m-%d strings and calculate the normals for each date
+normals_lst = [daily_normals(mm_dd) for mm_dd in mm_dd_range]
+normals = [item[0] for item in normals_lst]
+```
+
+The data was then loaded into a dataframe and subsequently plotted into an area plot.
+
+```python
+# Plot the daily normals as an area plot with `stacked=False`
+x = np.arange(0,len(normal_df))
+
+normal_df.plot.area(stacked = False, alpha = 0.5, figsize = (15,8))
+plt.xlabel("Date", fontsize = 16)
+plt.ylabel("Temperature (°F)", fontsize = 16)
+plt.xticks(x, mm_dd_range, rotation = 45)
+plt.legend(fontsize = 16)
+plt.tight_layout()
+plt.savefig("Images/area_temp_vacation.svg")
+plt.savefig("Images/area_temp_vacation.png")
+```
